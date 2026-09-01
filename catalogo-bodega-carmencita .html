@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bodega Carmencita — Catálogo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue:#0B4DA2;
+    --blue-dark:#062F66;
+    --blue-mid:#0F5FC4;
+    --blue-bright:#2E86F2;
+    --sky:#E9F2FD;
+    --cream:#F8F6F1;
+    --card:#FFFFFF;
+    --ink:#182233;
+    --muted:#6B7385;
+    --gold:#F2A93C;
+    --gold-dark:#C77E12;
+    --border:#E7E9EE;
+    --radius:18px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:112px;
+  }
+  .wrap{
+    max-width:480px;
+    margin:0 auto;
+    min-height:100vh;
+    background:var(--cream);
+    position:relative;
+    box-shadow:0 0 50px rgba(6,47,102,0.10);
+  }
+
+  /* Header — el "cartel" de la bodega */
+  header{
+    position:sticky;
+    top:0;
+    z-index:20;
+    background:
+      radial-gradient(120% 140% at 12% -10%, var(--blue-bright) 0%, transparent 55%),
+      linear-gradient(160deg, var(--blue) 0%, var(--blue-dark) 100%);
+    color:#fff;
+    padding:24px 20px 0;
+  }
+  .brand-row{
+    display:flex;
+    align-items:center;
+    gap:13px;
+  }
+  .brand-mark{
+    width:50px;height:50px;border-radius:50%;
+    background:#fff;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+    box-shadow:0 3px 10px rgba(0,0,0,0.15);
+  }
+  .brand-mark span{
+    font-family:'Archivo Black', sans-serif;
+    color:var(--blue);
+    font-size:17px;
+    letter-spacing:-0.5px;
+  }
+  header h1{
+    font-family:'Archivo Black', sans-serif;
+    font-weight:400;
+    font-size:22px;
+    letter-spacing:0.2px;
+    margin:0;
+    line-height:1.15;
+  }
+  header p.tag{
+    margin:4px 0 0;
+    font-size:13px;
+    color:#CFE1FA;
+    font-weight:500;
+  }
+  .pay-note{
+    margin-top:16px;
+    display:flex;
+    align-items:center;
+    gap:9px;
+    background:rgba(255,255,255,0.14);
+    border:1px solid rgba(255,255,255,0.22);
+    border-radius:12px;
+    padding:10px 13px;
+    font-size:12.5px;
+    color:#F1F6FD;
+  }
+  .pay-note b{color:#fff;}
+  .pay-note .ic{
+    width:26px;height:26px;border-radius:50%;
+    background:var(--gold);
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;font-size:13px;
+  }
+
+  /* Toldo — franja diagonal azul y blanco, como el toldo de la bodega */
+  .awning{
+    height:11px;
+    margin-top:18px;
+    background:repeating-linear-gradient(
+      113deg,
+      #ffffff 0px, #ffffff 13px,
+      var(--blue-mid) 13px, var(--blue-mid) 26px
+    );
+  }
+
+  /* Category chips */
+  .cats{
+    display:flex;
+    gap:9px;
+    overflow-x:auto;
+    padding:16px 20px 4px;
+    scrollbar-width:none;
+  }
+  .cats::-webkit-scrollbar{display:none;}
+  .chip{
+    flex-shrink:0;
+    padding:9px 17px;
+    border-radius:999px;
+    border:1.5px solid var(--border);
+    background:var(--card);
+    color:var(--blue);
+    font-size:13.5px;
+    font-weight:600;
+    cursor:pointer;
+    transition:all .15s ease;
+    white-space:nowrap;
+  }
+  .chip.active{
+    background:var(--blue);
+    border-color:var(--blue);
+    color:#fff;
+    box-shadow:0 4px 12px rgba(11,77,162,0.28);
+  }
+
+  /* Product grid */
+  main{padding:14px 20px 20px;}
+  .section-label{
+    font-size:15px;
+    font-weight:800;
+    color:var(--blue-dark);
+    margin:18px 2px 10px;
+  }
+  .grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+  }
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:14px 12px 12px;
+    display:flex;
+    flex-direction:column;
+    position:relative;
+    transition:border-color .15s ease;
+  }
+  .card .icon-slot{
+    width:100%;
+    aspect-ratio:1.3/1;
+    border-radius:12px;
+    background:var(--sky);
+    display:flex;align-items:center;justify-content:center;
+    font-size:26px;
+    line-height:1;
+    margin-bottom:10px;
+    overflow:hidden;
+  }
+  .card .icon-slot img{
+    width:100%;height:100%;
+    object-fit:cover;
+    display:block;
+  }
+  .card .name{
+    font-size:14px;
+    font-weight:700;
+    line-height:1.25;
+    margin:0 0 2px;
+  }
+  .card .unit{
+    font-size:11.5px;
+    color:var(--muted);
+    margin:0 0 10px;
+  }
+  .card .bottom-row{
+    margin-top:auto;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:6px;
+  }
+  .price{
+    font-weight:800;
+    font-size:15px;
+    color:var(--blue-dark);
+  }
+  .price small{font-size:11px;font-weight:500;color:var(--muted);}
+
+  .add-btn{
+    width:32px;height:32px;
+    border-radius:9px;
+    border:none;
+    background:var(--blue);
+    color:#fff;
+    font-size:18px;
+    font-weight:700;
+    cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    transition:transform .1s ease;
+  }
+  .add-btn:active{transform:scale(0.9);}
+
+  .stepper{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:var(--sky);
+    border-radius:9px;
+    padding:2px;
+  }
+  .stepper button{
+    width:26px;height:26px;
+    border-radius:7px;
+    border:none;
+    background:var(--blue);
+    color:#fff;
+    font-size:15px;
+    font-weight:700;
+    cursor:pointer;
+  }
+  .stepper span{
+    font-size:13px;
+    font-weight:700;
+    min-width:16px;
+    text-align:center;
+    color:var(--blue-dark);
+  }
+
+  /* Floating cart bar */
+  .cart-bar{
+    position:fixed;
+    left:50%;
+    transform:translateX(-50%) translateY(120px);
+    bottom:18px;
+    width:calc(100% - 40px);
+    max-width:440px;
+    background:linear-gradient(120deg, var(--blue) 0%, var(--blue-dark) 100%);
+    color:#fff;
+    border-radius:16px;
+    padding:14px 18px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    box-shadow:0 12px 30px rgba(6,47,102,0.45);
+    cursor:pointer;
+    z-index:30;
+    transition:transform .25s ease;
+  }
+  .cart-bar.show{transform:translateX(-50%) translateY(0);}
+  .cart-bar .left{display:flex;align-items:center;gap:10px;}
+  .cart-bar .count{
+    background:var(--gold);
+    color:var(--blue-dark);
+    font-weight:800;
+    font-size:12px;
+    border-radius:999px;
+    padding:3px 9px;
+  }
+  .cart-bar .label{font-size:14px;font-weight:600;}
+  .cart-bar .total{font-size:16px;font-weight:800;}
+
+  /* Cart drawer */
+  .overlay{
+    position:fixed;inset:0;
+    background:rgba(6,25,54,0.5);
+    z-index:40;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .2s ease;
+  }
+  .overlay.show{opacity:1;pointer-events:auto;}
+
+  .drawer{
+    position:fixed;
+    left:50%;
+    transform:translateX(-50%) translateY(100%);
+    bottom:0;
+    width:100%;
+    max-width:480px;
+    background:var(--cream);
+    border-radius:22px 22px 0 0;
+    z-index:41;
+    max-height:82vh;
+    display:flex;
+    flex-direction:column;
+    transition:transform .28s ease;
+    box-shadow:0 -10px 40px rgba(0,0,0,0.2);
+  }
+  .drawer.show{transform:translateX(-50%) translateY(0);}
+  .drawer-handle{
+    width:40px;height:4px;background:var(--border);
+    border-radius:99px;margin:12px auto 4px;
+  }
+  .drawer-head{
+    padding:10px 20px 12px;
+    display:flex;align-items:center;justify-content:space-between;
+    border-bottom:1px solid var(--border);
+  }
+  .drawer-head h2{
+    font-size:19px;margin:0;font-weight:800;color:var(--blue-dark);
+  }
+  .drawer-head button{
+    border:none;background:none;font-size:22px;color:var(--muted);cursor:pointer;
+  }
+  .drawer-items{
+    overflow-y:auto;
+    padding:8px 20px;
+    flex:1;
+  }
+  .empty-cart{
+    text-align:center;
+    color:var(--muted);
+    padding:40px 10px;
+    font-size:14px;
+  }
+  .drawer-item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px 0;
+    border-bottom:1px solid var(--border);
+  }
+  .drawer-item .icon-slot{
+    width:42px;height:42px;border-radius:10px;
+    background:var(--sky);
+    display:flex;align-items:center;justify-content:center;
+    font-size:19px;flex-shrink:0;
+    overflow:hidden;
+  }
+  .drawer-item .icon-slot img{
+    width:100%;height:100%;
+    object-fit:cover;
+    display:block;
+  }
+  .drawer-item .info{flex:1;min-width:0;}
+  .drawer-item .info .n{font-size:13.5px;font-weight:700;}
+  .drawer-item .info .p{font-size:12px;color:var(--muted);}
+  .drawer-item .remove{
+    border:none;background:none;color:#C6432F;font-size:12px;
+    font-weight:700;cursor:pointer;margin-left:2px;
+  }
+
+  .drawer-foot{
+    padding:14px 20px 22px;
+    border-top:1px solid var(--border);
+    background:var(--cream);
+  }
+  .totals-row{
+    display:flex;justify-content:space-between;align-items:baseline;
+    margin-bottom:12px;
+  }
+  .totals-row .l{font-size:14px;color:var(--muted);font-weight:600;}
+  .totals-row .v{font-size:24px;font-weight:800;color:var(--blue-dark);}
+  .wa-btn{
+    width:100%;
+    background:#25D366;
+    color:#fff;
+    border:none;
+    border-radius:14px;
+    padding:15px;
+    font-size:15.5px;
+    font-weight:700;
+    font-family:'Inter', sans-serif;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    cursor:pointer;
+  }
+  .wa-btn:disabled{background:#B9C2CC;cursor:not-allowed;}
+  .drawer-note{
+    font-size:11.5px;
+    color:var(--muted);
+    text-align:center;
+    margin-top:10px;
+    line-height:1.4;
+  }
+
+  footer{
+    text-align:center;
+    padding:18px 20px 8px;
+    color:var(--muted);
+    font-size:11.5px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand-row">
+      <div class="brand-mark"><span>BC</span></div>
+      <div>
+        <h1>Bodega Carmencita</h1>
+        <p class="tag">Tu bodega de confianza en Villa El Salvador</p>
+      </div>
+    </div>
+    <div class="pay-note">
+      <div class="ic">💳</div>
+      <span>Pagas fácil con <b>Yape</b> o <b>Plin</b> al confirmar tu pedido</span>
+    </div>
+    <div class="awning"></div>
+  </header>
+
+  <div class="cats" id="cats"></div>
+
+  <main id="main"></main>
+
+</div>
+
+<div class="cart-bar" id="cartBar">
+  <div class="left">
+    <span class="count" id="cartCount">0</span>
+    <span class="label">Ver mi pedido</span>
+  </div>
+  <div class="total" id="cartTotal">S/ 0.00</div>
+</div>
+
+<div class="overlay" id="overlay"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-handle"></div>
+  <div class="drawer-head">
+    <h2>Tu pedido</h2>
+    <button id="closeDrawer">✕</button>
+  </div>
+  <div class="drawer-items" id="drawerItems"></div>
+  <div class="drawer-foot">
+    <div class="totals-row">
+      <span class="l">Total a pagar</span>
+      <span class="v" id="drawerTotal">S/ 0.00</span>
+    </div>
+    <button class="wa-btn" id="sendBtn" disabled>
+      <span>📲</span> Enviar pedido por WhatsApp
+    </button>
+    <p class="drawer-note">Al enviar, se abrirá WhatsApp con tu pedido ya escrito.<br>Coordinas el pago (Yape/Plin) y la entrega directamente con la bodega.</p>
+  </div>
+</div>
+
+<script>
+// ------- CONFIGURA AQUÍ EL NÚMERO DE WHATSAPP DE LA BODEGA -------
+// Formato: código de país + número, sin "+" ni espacios. Ej: Perú = 51 9XXXXXXXX
+const WHATSAPP_NUMBER = "51900000000";
+// -------------------------------------------------------------------
+
+const CATEGORIES = [
+  { id: "abarrotes", label: "🥫 Abarrotes" },
+  { id: "bebidas", label: "🥤 Bebidas" },
+  { id: "frescos", label: "🥬 Frescos" },
+  { id: "limpieza", label: "🧼 Limpieza" },
+];
+
+// Para cada producto, pega la URL de su foto en "img".
+// Si dejas "img" vacío (""), se muestra el emoji como respaldo.
+const PRODUCTS = [
+  { id: 1, name: "Arroz Costeño", unit: "Bolsa 750g", price: 4.50, emoji: "🍚", img: "https://mercury.vteximg.com.br/arquivos/ids/6347794/image-40dbeaca38084e4199eb819cc76ec10d.jpg?v=637835775920800000", cat: "abarrotes" },
+  { id: 2, name: "Azúcar rubia", unit: "Bolsa 1kg", price: 4.20, emoji: "🍯", img: "https://http2.mlstatic.com/D_NQ_NP_863241-MLU89084492335_072025-O.webp", cat: "abarrotes" },
+  { id: 3, name: "Aceite Primor", unit: "Botella 1L", price: 9.90, emoji: "🫙", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToYhFzzVhcZBsH5ujPj6VeGwPiXCJ1l1k-j0IA3NmuQOLMU_eJawTjH5M&s=10", cat: "abarrotes" },
+  { id: 4, name: "Fideos spaghetti marca sayon", unit: "Paquete 500g", price: 3.20, emoji: "🍝", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUA8DjIaqQqVp_jhMuXA8uLECwMFlvvG7SZ48JWABFEnUOG8alNvPJORSD&s=10", cat: "abarrotes" },
+  { id: 5, name: "Atún Florida", unit: "Lata 170g", price: 5.50, emoji: "🥫", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnE_jfbogYjLJDxHpMJdr0mDtcJBKfV-Y5G6PO2FY_FsinldSFvMNILfON&s=10", cat: "abarrotes" },
+  { id: 6, name: "Leche Gloria", unit: "Tarro 400g", price: 4.80, emoji: "🥛", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDSZ0LMy0M66UT7fZsKRdqiOiuAucy96mhADsOV2boHL0JLJ8_3cqoyes&s=10", cat: "abarrotes" },
+  { id: 7, name: "Inca Kola", unit: "Botella 1.5L", price: 7.00, emoji: "🥤", img: "https://bodegamiguelito.com/wp-content/uploads/2024/12/7801610231517_1.webp", cat: "bebidas" },
+  { id: 8, name: "Agua San Luis", unit: "Botella 750ml", price: 2.00, emoji: "💧", img: "https://tofuu.getjusto.com/orioneat-local/resized2/xSQoMppE43ufhQxuE-2400-x.webp", cat: "bebidas" },
+  { id: 9, name: "Jugo Frugos", unit: "Caja 1L", price: 5.50, emoji: "🧃", img: "https://media.falabella.com/tottusPE/41057705_1/public", cat: "bebidas" },
+  { id: 10, name: "Tomate", unit: "Kilo", price: 3.50, emoji: "🍅", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTztjP-Oy4KDhgTk2Kp44tiejyuBJfX5hRfD8YXKdJOaXYlJ36grx4mL08&s=10", cat: "frescos" },
+  { id: 11, name: "Cebolla roja", unit: "Kilo", price: 3.00, emoji: "🧅", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5EuYe1C9LUvIftOF72twmo2o2Wf8tRbA4syfdPR0HocITP20IvcBj150&s=10", cat: "frescos" },
+  { id: 12, name: "Palta fuerte", unit: "Kilo", price: 6.00, emoji: "🥑", img: "https://sites.peru.info/DesktopModules/BB_LA_Superfood_Home/Images/Palta/hortalizas-palta-detalle.jpg", cat: "frescos" },
+  { id: 13, name: "Plátano de seda", unit: "Kilo", price: 3.20, emoji: "🍌", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBQYtupzAtVg3DcEkboajqxOQVW3S9J6CmlzOGQ6LNsmV9CqH9r5t2oZg&s=10", cat: "frescos" },
+  { id: 14, name: "Papa amarilla", unit: "Kilo", price: 3.80, emoji: "🥔", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzbhPJe2QzeWwZ5Tt-tJoYR4ZcMa2mA10T6qAv0wZCGACKMhBmikWBjnmB&s=10", cat: "frescos" },
+  { id: 15, name: "Detergente Bolívar", unit: "Bolsa 720g", price: 6.50, emoji: "🧴", img: "https://assets.bo-management.cord.pe/public/images/954ba3e9-e7dc-404b-a8ad-f0f6d0f80d4e-20423854_6.jpeg", cat: "limpieza" },
+  { id: 16, name: "Lejía Clorox", unit: "Botella 0.680L", price: 2.00, emoji: "🧽", img: "https://vegaperu.vtexassets.com/arquivos/ids/168702/750121.jpg?v=638798146937600000", cat: "limpieza" },
+  { id: 17, name: "Jabón Bolivar", unit: "Unidad", price: 2.30, emoji: "🧼", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJQ94FZW4UEyzWDyybhJgt5mT52dtTXDpjrEEAq6V7w-_vYcoCNUi-Iw4f&s=10", cat: "limpieza" },
+];
+
+// Devuelve el HTML del icono/foto de un producto: usa la imagen si existe,
+// y si falla al cargar o no hay URL, cae de vuelta al emoji.
+function productIconHtml(p){
+  if (p.img && p.img.trim() !== "") {
+    return `<img src="${p.img}" alt="${p.name}" onerror="this.parentElement.innerHTML='${p.emoji}'">`;
+  }
+  return p.emoji;
+}
+
+let activeCat = "todos";
+let cart = {}; // { productId: qty }
+
+const catsEl = document.getElementById("cats");
+const mainEl = document.getElementById("main");
+const cartBar = document.getElementById("cartBar");
+const cartCount = document.getElementById("cartCount");
+const cartTotal = document.getElementById("cartTotal");
+const overlay = document.getElementById("overlay");
+const drawer = document.getElementById("drawer");
+const drawerItems = document.getElementById("drawerItems");
+const drawerTotal = document.getElementById("drawerTotal");
+const sendBtn = document.getElementById("sendBtn");
+
+function money(n){ return "S/ " + n.toFixed(2); }
+
+function renderCats(){
+  catsEl.innerHTML = "";
+  CATEGORIES.forEach(c => {
+    const el = document.createElement("div");
+    el.className = "chip" + (c.id === activeCat ? " active" : "");
+    el.textContent = c.label;
+    el.onclick = () => { activeCat = c.id; renderCats(); renderProducts(); };
+    catsEl.appendChild(el);
+  });
+}
+
+function renderProducts(){
+  mainEl.innerHTML = "";
+  const list = PRODUCTS.filter(p => activeCat === "todos" || p.cat === activeCat);
+  const label = document.createElement("div");
+  label.className = "section-label";
+  label.textContent = activeCat === "todos" ? "Todos los productos" : CATEGORIES.find(c=>c.id===activeCat).label.replace(/^\S+\s/, "");
+  mainEl.appendChild(label);
+
+  const grid = document.createElement("div");
+  grid.className = "grid";
+
+  list.forEach(p => {
+    const qty = cart[p.id] || 0;
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <div class="icon-slot">${productIconHtml(p)}</div>
+      <p class="name">${p.name}</p>
+      <p class="unit">${p.unit}</p>
+      <div class="bottom-row">
+        <span class="price">${money(p.price)}</span>
+        <div class="qty-slot"></div>
+      </div>
+    `;
+    const slot = card.querySelector(".qty-slot");
+    if (qty > 0) {
+      slot.innerHTML = `
+        <div class="stepper">
+          <button data-act="minus">−</button>
+          <span>${qty}</span>
+          <button data-act="plus">+</button>
+        </div>`;
+      slot.querySelector('[data-act="minus"]').onclick = () => changeQty(p.id, -1);
+      slot.querySelector('[data-act="plus"]').onclick = () => changeQty(p.id, 1);
+    } else {
+      slot.innerHTML = `<button class="add-btn">+</button>`;
+      slot.querySelector(".add-btn").onclick = () => changeQty(p.id, 1);
+    }
+    grid.appendChild(card);
+  });
+
+  mainEl.appendChild(grid);
+}
+
+function changeQty(id, delta){
+  const current = cart[id] || 0;
+  const next = current + delta;
+  if (next <= 0) delete cart[id];
+  else cart[id] = next;
+  renderProducts();
+  renderCartBar();
+  renderDrawer();
+}
+
+function cartEntries(){
+  return Object.entries(cart).map(([id, qty]) => {
+    const p = PRODUCTS.find(pr => pr.id === Number(id));
+    return { ...p, qty };
+  });
+}
+
+function cartTotalValue(){
+  return cartEntries().reduce((sum, item) => sum + item.price * item.qty, 0);
+}
+
+function renderCartBar(){
+  const entries = cartEntries();
+  const count = entries.reduce((s,i)=>s+i.qty,0);
+  cartCount.textContent = count;
+  cartTotal.textContent = money(cartTotalValue());
+  cartBar.classList.toggle("show", count > 0);
+}
+
+function renderDrawer(){
+  const entries = cartEntries();
+  drawerItems.innerHTML = "";
+  if (entries.length === 0){
+    drawerItems.innerHTML = `<div class="empty-cart">Todavía no agregaste productos 🛒<br>Elige algo del catálogo para empezar.</div>`;
+    sendBtn.disabled = true;
+  } else {
+    entries.forEach(item => {
+      const row = document.createElement("div");
+      row.className = "drawer-item";
+      row.innerHTML = `
+        <div class="icon-slot">${productIconHtml(item)}</div>
+        <div class="info">
+          <div class="n">${item.qty} × ${item.name}</div>
+          <div class="p">${item.unit} · ${money(item.price)} c/u</div>
+        </div>
+        <button class="remove">Quitar</button>
+      `;
+      row.querySelector(".remove").onclick = () => { delete cart[item.id]; renderProducts(); renderCartBar(); renderDrawer(); };
+      drawerItems.appendChild(row);
+    });
+    sendBtn.disabled = false;
+  }
+  drawerTotal.textContent = money(cartTotalValue());
+}
+
+function openDrawer(){
+  overlay.classList.add("show");
+  drawer.classList.add("show");
+}
+function closeDrawerFn(){
+  overlay.classList.remove("show");
+  drawer.classList.remove("show");
+}
+
+cartBar.onclick = openDrawer;
+document.getElementById("closeDrawer").onclick = closeDrawerFn;
+overlay.onclick = closeDrawerFn;
+
+sendBtn.onclick = () => {
+  const entries = cartEntries();
+  if (entries.length === 0) return;
+  let msg = "Hola Bodega Carmencita! 👋 Quiero hacer este pedido:\n\n";
+  entries.forEach(item => {
+    msg += `• ${item.qty} x ${item.name} (${item.unit}) — ${money(item.price * item.qty)}\n`;
+  });
+  msg += `\nTotal: ${money(cartTotalValue())}`;
+  msg += "\n\nQuedo atento(a) para coordinar el pago (Yape/Plin) y la entrega. ¡Gracias!";
+  const url = `https://wa.me/${933203806}?text=${encodeURIComponent(msg)}`;
+  window.open(url, "_blank");
+};
+
+renderCats();
+renderProducts();
+renderCartBar();
+renderDrawer();
+</script>
+</body>
+</html>
