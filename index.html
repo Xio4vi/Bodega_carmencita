@@ -408,6 +408,102 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     color:var(--muted);
     font-size:11.5px;
   }
+  /* ---------- PASO 1: pantalla de checkout (método de pago) ---------- */
+.screen{
+  position:fixed;
+  left:50%;
+  transform:translateX(-50%) translateY(100%);
+  bottom:0;
+  width:100%;
+  max-width:480px;
+  height:100%;
+  max-height:100vh;
+  background:var(--cream);
+  z-index:50;
+  display:flex;
+  flex-direction:column;
+  transition:transform .28s ease;
+}
+.screen.show{transform:translateX(-50%) translateY(0);}
+.screen-head{
+  padding:18px 20px 14px;
+  display:flex;align-items:center;gap:12px;
+  background:linear-gradient(160deg, var(--blue) 0%, var(--blue-dark) 100%);
+  color:#fff;
+}
+.screen-head button{
+  border:none;background:rgba(255,255,255,0.16);color:#fff;
+  width:34px;height:34px;border-radius:10px;font-size:17px;cursor:pointer;
+  flex-shrink:0;
+}
+.screen-head h2{margin:0;font-size:18px;font-weight:800;}
+.screen-body{
+  flex:1;
+  overflow-y:auto;
+  padding:18px 20px 20px;
+}
+.pay-summary{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:14px 16px;
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:18px;
+}
+.pay-summary .l{font-size:13px;color:var(--muted);font-weight:600;}
+.pay-summary .v{font-size:20px;font-weight:800;color:var(--blue-dark);}
+.pay-label{font-size:13.5px;font-weight:800;color:var(--blue-dark);margin:0 0 10px;}
+.pay-options{display:flex;flex-direction:column;gap:10px;margin-bottom:18px;}
+.pay-opt{
+  display:flex;align-items:center;gap:12px;
+  background:var(--card);
+  border:1.5px solid var(--border);
+  border-radius:14px;
+  padding:13px 14px;
+  cursor:pointer;
+  transition:border-color .15s ease, background .15s ease;
+}
+.pay-opt.active{
+  border-color:var(--blue);
+  background:var(--sky);
+}
+.pay-opt .ic{
+  width:36px;height:36px;border-radius:10px;
+  background:var(--sky);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+}
+.pay-opt.active .ic{background:#fff;}
+.pay-opt .txt b{display:block;font-size:14px;color:var(--ink);}
+.pay-opt .txt span{font-size:12px;color:var(--muted);}
+.pay-detail{
+  background:var(--sky);
+  border-radius:14px;
+  padding:14px 16px;
+  font-size:13px;
+  color:var(--blue-dark);
+  line-height:1.55;
+  margin-bottom:18px;
+}
+.pay-detail b{color:var(--blue-dark);}
+.screen-foot{
+  padding:14px 20px 22px;
+  border-top:1px solid var(--border);
+  background:var(--cream);
+}
+.confirm-btn{
+  width:100%;
+  background:var(--blue);
+  color:#fff;
+  border:none;
+  border-radius:14px;
+  padding:15px;
+  font-size:15.5px;
+  font-weight:700;
+  font-family:'Inter', sans-serif;
+  cursor:pointer;
+}
+.confirm-btn:disabled{background:#B9C2CC;cursor:not-allowed;}
 </style>
 </head>
 <body>
@@ -465,7 +561,25 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <p class="drawer-note">Al enviar, se abrirá WhatsApp con tu pedido ya escrito.<br>Coordinas el pago (Yape/Plin) y la entrega directamente con la bodega.</p>
   </div>
 </div>
-
+<!-- PASO 1: Pantalla de checkout — elegir método de pago -->
+<div class="screen" id="checkoutScreen">
+  <div class="screen-head">
+    <button id="checkoutBack">←</button>
+    <h2>Elige cómo pagar</h2>
+  </div>
+  <div class="screen-body">
+    <div class="pay-summary">
+      <span class="l">Total a pagar</span>
+      <span class="v" id="checkoutTotal">S/ 0.00</span>
+    </div>
+    <p class="pay-label">Método de pago</p>
+    <div class="pay-options" id="payOptions"></div>
+    <div class="pay-detail" id="payDetail"></div>
+  </div>
+  <div class="screen-foot">
+    <button class="confirm-btn" id="confirmPayBtn">Ya pagué / confirmar pedido</button>
+  </div>
+</div>
 <script>
 // ------- CONFIGURA AQUÍ EL NÚMERO DE WHATSAPP DE LA BODEGA -------
 // Formato: código de país + número, sin "+" ni espacios. Ej: Perú = 51 9XXXXXXXX
@@ -649,17 +763,67 @@ cartBar.onclick = openDrawer;
 document.getElementById("closeDrawer").onclick = closeDrawerFn;
 overlay.onclick = closeDrawerFn;
 
+// ------- PASO 1: checkout con método de pago -------
+const PAY_METHODS = [
+  { id: "yape", label: "Yape", icon: "📲", detail: "Yapea al <b>933 203 806</b> (Bodega Carmencita) y presiona el botón de abajo cuando lo hayas hecho." },
+  { id: "plin", label: "Plin", icon: "📲", detail: "Plinea al <b>933 203 806</b> (Bodega Carmencita) y presiona el botón de abajo cuando lo hayas hecho." },
+  { id: "efectivo", label: "Efectivo al recoger/entregar", icon: "💵", detail: "Pagas en efectivo cuando recojas tu pedido en la tienda o cuando te lo entreguen." },
+];
+let selectedPay = "yape";
+
+const checkoutScreen = document.getElementById("checkoutScreen");
+const checkoutTotal = document.getElementById("checkoutTotal");
+const payOptionsEl = document.getElementById("payOptions");
+const payDetailEl = document.getElementById("payDetail");
+const confirmPayBtn = document.getElementById("confirmPayBtn");
+
+function renderPayOptions(){
+  payOptionsEl.innerHTML = "";
+  PAY_METHODS.forEach(m => {
+    const el = document.createElement("div");
+    el.className = "pay-opt" + (m.id === selectedPay ? " active" : "");
+    el.innerHTML = `<div class="ic">${m.icon}</div><div class="txt"><b>${m.label}</b></div>`;
+    el.onclick = () => { selectedPay = m.id; renderPayOptions(); };
+    payOptionsEl.appendChild(el);
+  });
+  const current = PAY_METHODS.find(m => m.id === selectedPay);
+  payDetailEl.innerHTML = current.detail;
+}
+
+function openCheckout(){
+  checkoutTotal.textContent = money(cartTotalValue());
+  renderPayOptions();
+  closeDrawerFn();
+  overlay.classList.add("show");
+  checkoutScreen.classList.add("show");
+}
+function closeCheckout(){
+  overlay.classList.remove("show");
+  checkoutScreen.classList.remove("show");
+}
+document.getElementById("checkoutBack").onclick = closeCheckout;
+
+// El botón del drawer ahora abre el checkout en vez de enviar directo
 sendBtn.onclick = () => {
   const entries = cartEntries();
   if (entries.length === 0) return;
+  openCheckout();
+};
+
+confirmPayBtn.onclick = () => {
+  const entries = cartEntries();
+  if (entries.length === 0) return;
+  const methodLabel = PAY_METHODS.find(m => m.id === selectedPay).label;
   let msg = "Hola Bodega Carmencita! 👋 Quiero hacer este pedido:\n\n";
   entries.forEach(item => {
     msg += `• ${item.qty} x ${item.name} (${item.unit}) — ${money(item.price * item.qty)}\n`;
   });
   msg += `\nTotal: ${money(cartTotalValue())}`;
-  msg += "\n\nQuedo atento(a) para coordinar el pago (Yape/Plin) y la entrega. ¡Gracias!";
+  msg += `\nMétodo de pago: ${methodLabel}`;
+  msg += "\n\n¡Gracias!";
   const url = `https://wa.me/${933203806}?text=${encodeURIComponent(msg)}`;
   window.open(url, "_blank");
+  closeCheckout();
 };
 
 renderCats();
