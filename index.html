@@ -591,7 +591,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="payer-fields" id="payerFields" style="display:none;">
   <p class="pay-label">Tus datos para el Yape/Plin</p>
   <input type="text" id="payerName" class="payer-input" placeholder="Nombre de quien va a yapear/plinear">
-  <input type="tel" id="payerPhone" class="payer-input" placeholder="Número desde el que va a yapear/plinear">
 </div>
   </div>
   <div class="screen-foot">
@@ -797,7 +796,6 @@ const confirmPayBtn = document.getElementById("confirmPayBtn");
 
 const payerFields = document.getElementById("payerFields");
 const payerNameInput = document.getElementById("payerName");
-const payerPhoneInput = document.getElementById("payerPhone");
 
 function renderPayOptions(){
   payOptionsEl.innerHTML = "";
@@ -850,11 +848,9 @@ confirmPayBtn.onclick = () => {
   });
   msg += `\nTotal: ${money(cartTotalValue())}`;
   msg += `\nMétodo de pago: ${methodLabel}`;
-  if (needsPayerData) {
+    if (needsPayerData) {
     const name = payerNameInput.value.trim();
-    const phone = payerPhoneInput.value.trim();
     if (name) msg += `\nPagado por: ${name}`;
-    if (phone) msg += ` (${phone})`;
   }
   msg += "\n\n¡Gracias!";
   const url = `https://wa.me/${933203806}?text=${encodeURIComponent(msg)}`;
