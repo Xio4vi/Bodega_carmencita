@@ -491,6 +491,19 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   border-top:1px solid var(--border);
   background:var(--cream);
 }
+.payer-fields{margin-bottom:18px;}
+.payer-input{
+  width:100%;
+  border:1.5px solid var(--border);
+  border-radius:12px;
+  padding:12px 14px;
+  font-size:14px;
+  font-family:'Inter', sans-serif;
+  color:var(--ink);
+  margin-bottom:10px;
+  background:var(--card);
+}
+.payer-input:focus{outline:none;border-color:var(--blue);}
 .confirm-btn{
   width:100%;
   background:var(--blue);
@@ -575,6 +588,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <p class="pay-label">Método de pago</p>
     <div class="pay-options" id="payOptions"></div>
     <div class="pay-detail" id="payDetail"></div>
+    <div class="payer-fields" id="payerFields" style="display:none;">
+  <p class="pay-label">Tus datos para el Yape/Plin</p>
+  <input type="text" id="payerName" class="payer-input" placeholder="Nombre de quien va a yapear/plinear">
+  <input type="tel" id="payerPhone" class="payer-input" placeholder="Número desde el que va a yapear/plinear">
+</div>
   </div>
   <div class="screen-foot">
     <button class="confirm-btn" id="confirmPayBtn">Ya pagué / confirmar pedido</button>
@@ -777,6 +795,10 @@ const payOptionsEl = document.getElementById("payOptions");
 const payDetailEl = document.getElementById("payDetail");
 const confirmPayBtn = document.getElementById("confirmPayBtn");
 
+const payerFields = document.getElementById("payerFields");
+const payerNameInput = document.getElementById("payerName");
+const payerPhoneInput = document.getElementById("payerPhone");
+
 function renderPayOptions(){
   payOptionsEl.innerHTML = "";
   PAY_METHODS.forEach(m => {
@@ -788,8 +810,14 @@ function renderPayOptions(){
   });
   const current = PAY_METHODS.find(m => m.id === selectedPay);
   payDetailEl.innerHTML = current.detail;
-}
 
+  // Mostrar campos de nombre/número solo para Yape o Plin
+  const needsPayerData = selectedPay === "yape" || selectedPay === "plin";
+  payerFields.style.display = needsPayerData ? "block" : "none";
+
+  // Texto del botón según el método
+  confirmPayBtn.textContent = needsPayerData ? "Ya pagué, enviar pedido" : "Confirmar pedido";
+}
 function openCheckout(){
   checkoutTotal.textContent = money(cartTotalValue());
   renderPayOptions();
@@ -814,12 +842,20 @@ confirmPayBtn.onclick = () => {
   const entries = cartEntries();
   if (entries.length === 0) return;
   const methodLabel = PAY_METHODS.find(m => m.id === selectedPay).label;
+  const needsPayerData = selectedPay === "yape" || selectedPay === "plin";
+
   let msg = "Hola Bodega Carmencita! 👋 Quiero hacer este pedido:\n\n";
   entries.forEach(item => {
     msg += `• ${item.qty} x ${item.name} (${item.unit}) — ${money(item.price * item.qty)}\n`;
   });
   msg += `\nTotal: ${money(cartTotalValue())}`;
   msg += `\nMétodo de pago: ${methodLabel}`;
+  if (needsPayerData) {
+    const name = payerNameInput.value.trim();
+    const phone = payerPhoneInput.value.trim();
+    if (name) msg += `\nPagado por: ${name}`;
+    if (phone) msg += ` (${phone})`;
+  }
   msg += "\n\n¡Gracias!";
   const url = `https://wa.me/${933203806}?text=${encodeURIComponent(msg)}`;
   window.open(url, "_blank");
