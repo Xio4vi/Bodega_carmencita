@@ -516,6 +516,31 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   font-family:'Inter', sans-serif;
   cursor:pointer;
 }
+.proof-note{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  gap:10px;
+  background:var(--card);
+  border:1.5px dashed var(--gold);
+  border-radius:14px;
+  padding:16px 16px 14px;
+  margin-bottom:18px;
+}
+.proof-avatar{
+  width:96px;height:96px;
+  border-radius:50%;
+  object-fit:cover;
+  border:3px solid var(--gold);
+}
+.proof-note p{
+  margin:0;
+  font-size:13.5px;
+  color:var(--ink);
+  line-height:1.55;
+  max-width:280px;
+}
 .confirm-btn:disabled{background:#B9C2CC;cursor:not-allowed;}
 </style>
 </head>
@@ -589,6 +614,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="pay-options" id="payOptions"></div>
     <div class="pay-detail" id="payDetail"></div>
     <div class="payer-fields" id="payerFields" style="display:none;">
+      <div class="proof-note" id="proofNote" style="display:none;">
+  <img src="carmencita.png" alt="Bodega Carmencita" class="proof-avatar" onerror="this.style.display='none'">
+  <p>📸 Envíame la <b>captura de tu pago</b> junto con tu pedido por WhatsApp, así te confirmo más rápido. ¡Gracias! 😊</p>
+</div>
   <p class="pay-label">Tus datos para el Yape/Plin</p>
   <input type="text" id="payerName" class="payer-input" placeholder="Nombre de quien va a yapear/plinear">
 </div>
@@ -796,7 +825,7 @@ const confirmPayBtn = document.getElementById("confirmPayBtn");
 
 const payerFields = document.getElementById("payerFields");
 const payerNameInput = document.getElementById("payerName");
-
+const proofNote = document.getElementById("proofNote");
 function renderPayOptions(){
   payOptionsEl.innerHTML = "";
   PAY_METHODS.forEach(m => {
@@ -810,8 +839,9 @@ function renderPayOptions(){
   payDetailEl.innerHTML = current.detail;
 
   // Mostrar campos de nombre/número solo para Yape o Plin
-  const needsPayerData = selectedPay === "yape" || selectedPay === "plin";
-  payerFields.style.display = needsPayerData ? "block" : "none";
+const needsPayerData = selectedPay === "yape" || selectedPay === "plin";
+payerFields.style.display = needsPayerData ? "block" : "none";
+proofNote.style.display = needsPayerData ? "flex" : "none";
 
   // Texto del botón según el método
   confirmPayBtn.textContent = needsPayerData ? "Ya pagué, enviar pedido" : "Confirmar pedido";
