@@ -1,0 +1,1886 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow">
+
+<title>Panel del negocio — Bodega Carmencita</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --blue:#0B4DA2;
+    --blue-dark:#062F66;
+    --blue-mid:#0F5FC4;
+    --blue-bright:#2E86F2;
+    --sky:#E9F2FD;
+    --cream:#F8F6F1;
+    --card:#FFFFFF;
+    --ink:#182233;
+    --muted:#6B7385;
+    --gold:#F2A93C;
+    --gold-dark:#C77E12;
+    --border:#E7E9EE;
+    --radius:18px;
+  }
+
+  *{
+    box-sizing:border-box;
+  }
+
+  html,
+  body{
+    margin:0;
+    padding:0;
+  }
+
+  body{
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{
+    max-width:480px;
+    margin:0 auto;
+    min-height:100vh;
+    background:var(--cream);
+    box-shadow:0 0 50px rgba(6,47,102,0.10);
+  }
+
+  /* =========================
+     HEADER
+  ========================= */
+
+  header{
+    background:
+      radial-gradient(
+        120% 140% at 12% -10%,
+        var(--blue-bright) 0%,
+        transparent 55%
+      ),
+      linear-gradient(
+        160deg,
+        var(--blue) 0%,
+        var(--blue-dark) 100%
+      );
+
+    color:#fff;
+    padding:22px 20px 20px;
+  }
+
+  header h1{
+    font-family:'Archivo Black', sans-serif;
+    font-weight:400;
+    font-size:19px;
+    margin:0 0 3px;
+  }
+
+  header p{
+    margin:0;
+    font-size:12.5px;
+    color:#CFE1FA;
+  }
+
+  /* =========================
+     LOCK SCREEN
+  ========================= */
+
+  .lock-screen{
+    padding:60px 26px;
+    text-align:center;
+  }
+
+  .lock-screen .ic{
+    font-size:40px;
+    margin-bottom:14px;
+  }
+
+  .lock-screen h2{
+    font-size:17px;
+    margin:0 0 8px;
+    color:var(--blue-dark);
+  }
+
+  .lock-screen p{
+    font-size:13.5px;
+    color:var(--muted);
+    margin:0 0 22px;
+    line-height:1.5;
+  }
+
+  .pin-input{
+    width:100%;
+    text-align:center;
+    letter-spacing:6px;
+    font-size:22px;
+    font-weight:700;
+    border:1.5px solid var(--border);
+    border-radius:12px;
+    padding:13px 14px;
+    font-family:'Inter', sans-serif;
+    color:var(--ink);
+    margin-bottom:14px;
+    outline:none;
+  }
+
+  .pin-input:focus{
+    border-color:var(--blue);
+    box-shadow:0 0 0 3px rgba(11,77,162,0.10);
+  }
+
+  .pin-btn{
+    width:100%;
+    background:var(--blue);
+    color:#fff;
+    border:none;
+    border-radius:12px;
+    padding:13px;
+    font-size:14.5px;
+    font-weight:700;
+    cursor:pointer;
+    font-family:'Inter', sans-serif;
+    transition:all 0.15s ease;
+  }
+
+  .pin-btn:hover{
+    background:var(--blue-dark);
+  }
+
+  .pin-btn:active{
+    transform:scale(0.98);
+  }
+
+  .pin-error{
+    color:#C4593B !important;
+    font-size:12.5px !important;
+    margin-top:10px !important;
+    margin-bottom:0 !important;
+    display:none;
+  }
+
+  /* =========================
+     PANEL
+  ========================= */
+
+  .panel{
+    display:none;
+    padding:20px 20px 50px;
+  }
+
+  /* =========================
+     FILTERS
+  ========================= */
+
+  .bd-filter-bar{
+    display:flex;
+    gap:6px;
+    margin-bottom:20px;
+    background:var(--sky);
+    padding:5px;
+    border-radius:14px;
+  }
+
+  .bd-filter-btn{
+    flex:1;
+    background:transparent;
+    border:none;
+    border-radius:10px;
+    padding:10px 6px;
+    font-size:13px;
+    font-weight:700;
+    color:var(--blue-dark);
+    cursor:pointer;
+    font-family:'Inter', sans-serif;
+    transition:all 0.15s ease;
+  }
+
+  .bd-filter-btn:hover{
+    background:rgba(11,77,162,0.08);
+  }
+
+  .bd-filter-btn.active{
+    background:var(--blue);
+    color:#fff;
+    box-shadow:0 3px 10px rgba(11,77,162,0.35);
+  }
+
+  /* =========================
+     STATS
+  ========================= */
+
+  .bd-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-bottom:8px;
+  }
+
+  .bd-stat{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:14px;
+  }
+
+  .bd-stat .v{
+    font-size:20px;
+    font-weight:800;
+    color:var(--blue-dark);
+  }
+
+  .bd-stat .l{
+    font-size:11.5px;
+    color:var(--muted);
+    font-weight:600;
+    margin-top:3px;
+  }
+
+  /* =========================
+     SECTIONS
+  ========================= */
+
+  .bd-section-title{
+    font-size:13.5px;
+    font-weight:800;
+    color:var(--blue-dark);
+    margin:22px 0 10px;
+  }
+
+  /* =========================
+     BARS
+  ========================= */
+
+  .bd-bar-row{
+    margin-bottom:13px;
+  }
+
+  .bd-bar-row .top{
+    display:flex;
+    justify-content:space-between;
+    gap:8px;
+    font-size:13px;
+    font-weight:600;
+    color:var(--ink);
+    margin-bottom:5px;
+  }
+
+  .bd-bar-row .top .n{
+    color:var(--muted);
+    font-weight:600;
+    flex-shrink:0;
+  }
+
+  .bd-bar-track{
+    background:var(--sky);
+    border-radius:8px;
+    height:10px;
+    overflow:hidden;
+  }
+
+  .bd-bar-fill{
+    height:100%;
+    border-radius:8px;
+    background:
+      linear-gradient(
+        90deg,
+        var(--blue-mid),
+        var(--blue-bright)
+      );
+  }
+
+  .bd-bar-fill.gold{
+    background:
+      linear-gradient(
+        90deg,
+        var(--gold-dark),
+        var(--gold)
+      );
+  }
+
+  /* =========================
+     INSIGHTS
+  ========================= */
+
+  .bd-insight{
+    background:var(--sky);
+    border-left:4px solid var(--blue);
+    border-radius:12px;
+    padding:14px 16px;
+    font-size:13.5px;
+    line-height:1.62;
+    color:var(--blue-dark);
+    margin-top:16px;
+  }
+
+  .bd-insight b{
+    color:var(--blue-dark);
+  }
+
+  .bd-insight + .bd-insight{
+    margin-top:10px;
+  }
+
+  /* =========================
+     EMPTY
+  ========================= */
+
+  .bd-empty{
+    font-size:13.5px;
+    color:var(--muted);
+    text-align:center;
+    padding:50px 16px;
+    line-height:1.6;
+  }
+
+  /* =========================
+     ACTION BUTTONS
+  ========================= */
+
+  .bd-action-row{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-top:28px;
+    padding-top:20px;
+    border-top:1px solid var(--border);
+  }
+
+  .lock-again{
+    display:block;
+    width:100%;
+    padding:12px;
+    border-radius:12px;
+    font-size:13.5px;
+    font-weight:700;
+    cursor:pointer;
+    font-family:'Inter', sans-serif;
+    border:1.5px solid var(--border);
+    background:var(--card);
+    color:var(--blue-dark);
+    text-decoration:none;
+    transition:all 0.15s ease;
+  }
+
+  .lock-again:hover{
+    background:var(--sky);
+  }
+
+  .lock-again:active{
+    transform:scale(0.98);
+  }
+
+  .lock-again.danger{
+    color:#C4593B;
+    border-color:#F2D4C8;
+    background:#FDF3EF;
+  }
+
+  .lock-again.danger:hover{
+    background:#FBE7DD;
+  }
+
+  /* =========================
+     MOBILE
+  ========================= */
+
+  @media(max-width:360px){
+    .panel{
+      padding-left:15px;
+      padding-right:15px;
+    }
+
+    header{
+      padding-left:15px;
+      padding-right:15px;
+    }
+
+    .lock-screen{
+      padding-left:20px;
+      padding-right:20px;
+    }
+  }
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+  <!-- =========================
+       HEADER
+  ========================= -->
+
+  <header>
+    <h1>📊 Bodega Carmencita</h1>
+    <p>Panel del negocio — uso interno</p>
+  </header>
+
+  <!-- =========================
+       LOGIN
+  ========================= -->
+
+  <div class="lock-screen" id="lockScreen">
+
+    <div class="ic">🔒</div>
+
+    <h2>Acceso solo para la bodega</h2>
+
+    <p>
+      Ingresa el PIN para ver los datos de pedidos.
+    </p>
+
+    <input
+      type="password"
+      inputmode="numeric"
+      maxlength="6"
+      class="pin-input"
+      id="pinInput"
+      placeholder="••••"
+      autocomplete="off"
+    >
+
+    <button class="pin-btn" id="pinBtn">
+      Entrar
+    </button>
+
+    <p class="pin-error" id="pinError">
+      PIN incorrecto, intenta de nuevo.
+    </p>
+
+  </div>
+
+  <!-- =========================
+       PANEL
+  ========================= -->
+
+  <div class="panel" id="panel"></div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   CONFIGURACIÓN
+========================================================= */
+
+const ADMIN_PIN = "1234";
+
+const BD_KEY = "bc_orders_v1";
+const BD_SEED_FLAG = "bc_orders_seeded_v1";
+
+let currentPeriod = "today";
+
+
+/* =========================================================
+   CATEGORÍAS
+========================================================= */
+
+const CATEGORIES = [
+  {
+    id: "abarrotes",
+    label: "🥫 Abarrotes"
+  },
+  {
+    id: "bebidas",
+    label: "🥤 Bebidas"
+  },
+  {
+    id: "frescos",
+    label: "🥬 Frescos"
+  },
+  {
+    id: "limpieza",
+    label: "🧼 Limpieza"
+  }
+];
+
+
+/* =========================================================
+   PRODUCTOS
+========================================================= */
+
+const PRODUCTS = [
+
+  {
+    id: 1,
+    name: "Arroz Costeño",
+    price: 4.50,
+    cat: "abarrotes"
+  },
+
+  {
+    id: 2,
+    name: "Azúcar rubia",
+    price: 4.20,
+    cat: "abarrotes"
+  },
+
+  {
+    id: 3,
+    name: "Aceite Primor",
+    price: 9.90,
+    cat: "abarrotes"
+  },
+
+  {
+    id: 4,
+    name: "Fideos spaghetti marca sayon",
+    price: 3.20,
+    cat: "abarrotes"
+  },
+
+  {
+    id: 5,
+    name: "Atún Florida",
+    price: 5.50,
+    cat: "abarrotes"
+  },
+
+  {
+    id: 6,
+    name: "Leche Gloria",
+    price: 4.80,
+    cat: "abarrotes"
+  },
+
+  {
+    id: 7,
+    name: "Inca Kola",
+    price: 7.00,
+    cat: "bebidas"
+  },
+
+  {
+    id: 8,
+    name: "Agua San Luis",
+    price: 2.00,
+    cat: "bebidas"
+  },
+
+  {
+    id: 9,
+    name: "Jugo Frugos",
+    price: 5.50,
+    cat: "bebidas"
+  },
+
+  {
+    id: 10,
+    name: "Tomate",
+    price: 3.50,
+    cat: "frescos"
+  },
+
+  {
+    id: 11,
+    name: "Cebolla roja",
+    price: 3.00,
+    cat: "frescos"
+  },
+
+  {
+    id: 12,
+    name: "Palta fuerte",
+    price: 6.00,
+    cat: "frescos"
+  },
+
+  {
+    id: 13,
+    name: "Plátano de seda",
+    price: 3.20,
+    cat: "frescos"
+  },
+
+  {
+    id: 14,
+    name: "Papa amarilla",
+    price: 3.80,
+    cat: "frescos"
+  },
+
+  {
+    id: 15,
+    name: "Detergente Bolívar",
+    price: 6.50,
+    cat: "limpieza"
+  },
+
+  {
+    id: 16,
+    name: "Lejía Clorox",
+    price: 2.00,
+    cat: "limpieza"
+  },
+
+  {
+    id: 17,
+    name: "Jabón Bolivar",
+    price: 2.30,
+    cat: "limpieza"
+  }
+
+];
+
+
+/* =========================================================
+   FRANJAS HORARIAS
+========================================================= */
+
+const HOUR_BUCKETS = [
+
+  {
+    label: "🌙 Madrugada (12am–6am)",
+    from: 0,
+    to: 6
+  },
+
+  {
+    label: "🌤️ Mañana (6am–12pm)",
+    from: 6,
+    to: 12
+  },
+
+  {
+    label: "☀️ Tarde (12pm–6pm)",
+    from: 12,
+    to: 18
+  },
+
+  {
+    label: "🌆 Noche (6pm–12am)",
+    from: 18,
+    to: 24
+  }
+
+];
+
+
+/* =========================================================
+   UTILIDADES
+========================================================= */
+
+function money(n){
+
+  return "S/ " + Number(n).toFixed(2);
+
+}
+
+
+/* =========================================================
+   LOCAL STORAGE
+========================================================= */
+
+function bdGetOrders(){
+
+  try{
+
+    const data = localStorage.getItem(BD_KEY);
+
+    if(!data){
+      return [];
+    }
+
+    const parsed = JSON.parse(data);
+
+    return Array.isArray(parsed)
+      ? parsed
+      : [];
+
+  }catch(error){
+
+    console.error(
+      "Error leyendo pedidos:",
+      error
+    );
+
+    return [];
+
+  }
+
+}
+
+
+function bdSaveOrders(orders){
+
+  try{
+
+    localStorage.setItem(
+      BD_KEY,
+      JSON.stringify(orders)
+    );
+
+    return true;
+
+  }catch(error){
+
+    console.error(
+      "Error guardando pedidos:",
+      error
+    );
+
+    return false;
+
+  }
+
+}
+
+
+/* =========================================================
+   FILTRAR PEDIDOS
+========================================================= */
+
+function filterOrdersByPeriod(
+  orders,
+  period
+){
+
+  const now = new Date();
+
+  if(period === "today"){
+
+    return orders.filter(order => {
+
+      const d = new Date(order.ts);
+
+      return (
+        d.getFullYear() === now.getFullYear() &&
+        d.getMonth() === now.getMonth() &&
+        d.getDate() === now.getDate()
+      );
+
+    });
+
+  }
+
+
+  if(period === "month"){
+
+    return orders.filter(order => {
+
+      const d = new Date(order.ts);
+
+      return (
+        d.getFullYear() === now.getFullYear() &&
+        d.getMonth() === now.getMonth()
+      );
+
+    });
+
+  }
+
+
+  return orders;
+
+}
+
+
+/* =========================================================
+   DATOS DE EJEMPLO
+========================================================= */
+
+function bdSeedIfNeeded(){
+
+  try{
+
+    if(
+      localStorage.getItem(BD_SEED_FLAG)
+    ){
+      return;
+    }
+
+
+    const weights = {
+
+      1:10,
+      2:6,
+      3:9,
+      4:7,
+      5:5,
+      6:8,
+      7:12,
+      8:11,
+      9:5,
+      10:6,
+      11:5,
+      12:4,
+      13:5,
+      14:4,
+      15:4,
+      16:3,
+      17:3
+
+    };
+
+
+    const pool = [];
+
+
+    Object.entries(weights).forEach(
+      ([id,w]) => {
+
+        for(
+          let i = 0;
+          i < w;
+          i++
+        ){
+
+          pool.push(Number(id));
+
+        }
+
+      }
+    );
+
+
+    const hourWeights = [
+      1,1,1,1,1,1,
+      2,4,6,7,6,8,
+      10,9,8,9,10,9,
+      7,5,4,3,2,1
+    ];
+
+
+    const hourPool = [];
+
+
+    hourWeights.forEach(
+      (w,h) => {
+
+        for(
+          let i = 0;
+          i < w;
+          i++
+        ){
+
+          hourPool.push(h);
+
+        }
+
+      }
+    );
+
+
+    const orders = [];
+
+    const now = Date.now();
+
+    const DAY =
+      24 * 60 * 60 * 1000;
+
+
+    for(
+      let i = 0;
+      i < 150;
+      i++
+    ){
+
+      const daysAgo =
+        Math.floor(
+          Math.random() * 45
+        );
+
+
+      const hour =
+        hourPool[
+          Math.floor(
+            Math.random() *
+            hourPool.length
+          )
+        ];
+
+
+      const ts =
+        now -
+        daysAgo * DAY -
+        Math.random() * DAY;
+
+
+      const d =
+        new Date(ts);
+
+
+      d.setHours(
+        hour,
+        Math.floor(
+          Math.random() * 60
+        ),
+        0,
+        0
+      );
+
+
+      const nItems =
+        1 +
+        Math.floor(
+          Math.random() * 3
+        );
+
+
+      const items = [];
+
+      const used =
+        new Set();
+
+
+      for(
+        let j = 0;
+        j < nItems;
+        j++
+      ){
+
+        const pid =
+          pool[
+            Math.floor(
+              Math.random() *
+              pool.length
+            )
+          ];
+
+
+        if(
+          used.has(pid)
+        ){
+          continue;
+        }
+
+
+        used.add(pid);
+
+
+        const p =
+          PRODUCTS.find(
+            product =>
+              product.id === pid
+          );
+
+
+        if(!p){
+          continue;
+        }
+
+
+        const qty =
+          1 +
+          Math.floor(
+            Math.random() * 2
+          );
+
+
+        items.push({
+
+          id:p.id,
+          name:p.name,
+          cat:p.cat,
+          qty:qty,
+          price:p.price
+
+        });
+
+      }
+
+
+      if(
+        items.length === 0
+      ){
+        continue;
+      }
+
+
+      const total =
+        items.reduce(
+          (sum,item) =>
+            sum +
+            item.price *
+            item.qty,
+          0
+        );
+
+
+      const method =
+        Math.random() < 0.75
+
+        ? (
+            Math.random() < 0.6
+            ? "Yape"
+            : "Plin"
+          )
+
+        : "Efectivo al recoger/entregar";
+
+
+      orders.push({
+
+        ts:d.getTime(),
+        total:total,
+        method:method,
+        items:items
+
+      });
+
+    }
+
+
+    orders.sort(
+      (a,b) =>
+        a.ts - b.ts
+    );
+
+
+    const existing =
+      bdGetOrders();
+
+
+    bdSaveOrders(
+      existing
+        .concat(orders)
+        .sort(
+          (a,b) =>
+            a.ts - b.ts
+        )
+    );
+
+
+    localStorage.setItem(
+      BD_SEED_FLAG,
+      "1"
+    );
+
+  }catch(error){
+
+    console.error(
+      "Error generando datos:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   RENDER DEL PANEL
+========================================================= */
+
+function bdRender(){
+
+  const body =
+    document.getElementById(
+      "panel"
+    );
+
+
+  const allOrders =
+    bdGetOrders();
+
+
+  const orders =
+    filterOrdersByPeriod(
+      allOrders,
+      currentPeriod
+    );
+
+
+  /* FILTROS */
+
+  const filterBarHtml = `
+
+    <div class="bd-filter-bar">
+
+      <button
+        class="bd-filter-btn ${
+          currentPeriod === "today"
+          ? "active"
+          : ""
+        }"
+        data-period="today"
+      >
+        Hoy
+      </button>
+
+
+      <button
+        class="bd-filter-btn ${
+          currentPeriod === "month"
+          ? "active"
+          : ""
+        }"
+        data-period="month"
+      >
+        Este mes
+      </button>
+
+
+      <button
+        class="bd-filter-btn ${
+          currentPeriod === "all"
+          ? "active"
+          : ""
+        }"
+        data-period="all"
+      >
+        Todo
+      </button>
+
+    </div>
+
+  `;
+
+
+  /* SIN PEDIDOS */
+
+  if(
+    orders.length === 0
+  ){
+
+    body.innerHTML =
+
+      filterBarHtml +
+
+      `
+
+      <div class="bd-empty">
+
+        No hay pedidos registrados
+        en este periodo.
+
+        <br>
+
+        Prueba con otro filtro arriba. 📊
+
+      </div>
+
+
+      <div class="bd-action-row">
+
+        <button
+          class="lock-again"
+          id="lockAgain"
+        >
+          🔒 Cerrar panel
+        </button>
+
+
+        <button
+          class="lock-again danger"
+          id="wipeData"
+        >
+          🗑️ Borrar todo el historial
+        </button>
+
+      </div>
+
+      `;
+
+
+    bdWireFilterButtons();
+
+    bdWireActions();
+
+    return;
+
+  }
+
+
+  /* ESTADÍSTICAS */
+
+  const nOrders =
+    orders.length;
+
+
+  const revenue =
+    orders.reduce(
+      (sum,order) =>
+        sum + Number(order.total || 0),
+      0
+    );
+
+
+  const avgTicket =
+    revenue / nOrders;
+
+
+  /* PRODUCTOS */
+
+  const prodCount = {};
+
+  const catCount = {};
+
+
+  orders.forEach(
+    order => {
+
+      if(
+        !Array.isArray(order.items)
+      ){
+        return;
+      }
+
+
+      order.items.forEach(
+        item => {
+
+          prodCount[item.name] =
+            (
+              prodCount[item.name] ||
+              0
+            ) +
+            Number(item.qty || 0);
+
+
+          catCount[item.cat] =
+            (
+              catCount[item.cat] ||
+              0
+            ) +
+            Number(item.qty || 0);
+
+        }
+      );
+
+    }
+  );
+
+
+  const topProducts =
+    Object.entries(prodCount)
+      .sort(
+        (a,b) =>
+          b[1] - a[1]
+      )
+      .slice(0,5);
+
+
+  const maxProd =
+    topProducts.length
+      ? topProducts[0][1]
+      : 1;
+
+
+  /* CATEGORÍAS */
+
+  const catTotal =
+    Object.values(catCount)
+      .reduce(
+        (a,b) =>
+          a + b,
+        0
+      ) || 1;
+
+
+  const catRows =
+    CATEGORIES
+      .map(category => ({
+
+        label:category.label,
+
+        n:
+          catCount[category.id] ||
+          0
+
+      }))
+      .sort(
+        (a,b) =>
+          b.n - a.n
+      );
+
+
+  /* HORARIOS */
+
+  const bucketCount =
+    HOUR_BUCKETS.map(
+      () => 0
+    );
+
+
+  orders.forEach(
+    order => {
+
+      const h =
+        new Date(
+          order.ts
+        ).getHours();
+
+
+      const idx =
+        HOUR_BUCKETS.findIndex(
+          bucket =>
+            h >= bucket.from &&
+            h < bucket.to
+        );
+
+
+      if(idx >= 0){
+
+        bucketCount[idx]++;
+
+      }
+
+    }
+  );
+
+
+  const maxBucket =
+    Math.max(
+      ...bucketCount,
+      1
+    );
+
+
+  const topBucketIdx =
+    bucketCount.indexOf(
+      Math.max(
+        ...bucketCount
+      )
+    );
+
+
+  const topProductName =
+    topProducts.length
+      ? topProducts[0][0]
+      : "Ninguno";
+
+
+  /* =========================================================
+     HTML DEL PANEL
+  ========================================================= */
+
+  body.innerHTML =
+
+    filterBarHtml +
+
+    `
+
+    <div class="bd-grid">
+
+      <div class="bd-stat">
+
+        <div class="v">
+          ${nOrders}
+        </div>
+
+        <div class="l">
+          Pedidos registrados
+        </div>
+
+      </div>
+
+
+      <div class="bd-stat">
+
+        <div class="v">
+          ${money(avgTicket)}
+        </div>
+
+        <div class="l">
+          Ticket promedio
+        </div>
+
+      </div>
+
+
+      <div class="bd-stat">
+
+        <div class="v">
+          ${money(revenue)}
+        </div>
+
+        <div class="l">
+          Total vendido
+        </div>
+
+      </div>
+
+
+      <div class="bd-stat">
+
+        <div class="v">
+          ${
+            HOUR_BUCKETS[
+              topBucketIdx
+            ].label.split(" ")[0]
+          }
+        </div>
+
+        <div class="l">
+          Franja con más pedidos
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="bd-section-title">
+      🏆 Productos más pedidos
+    </div>
+
+
+    ${
+      topProducts
+        .map(
+          ([name,n]) => `
+
+          <div class="bd-bar-row">
+
+            <div class="top">
+
+              <span>
+                ${name}
+              </span>
+
+              <span class="n">
+                ${n} und.
+              </span>
+
+            </div>
+
+
+            <div class="bd-bar-track">
+
+              <div
+                class="bd-bar-fill"
+                style="
+                  width:${Math.round(
+                    n / maxProd * 100
+                  )}%
+                "
+              ></div>
+
+            </div>
+
+          </div>
+
+          `
+        )
+        .join("")
+    }
+
+
+    <div class="bd-section-title">
+      🗂️ Ventas por categoría
+    </div>
+
+
+    ${
+      catRows
+        .map(
+          category => {
+
+            const percentage =
+              Math.round(
+                category.n /
+                catTotal *
+                100
+              );
+
+
+            return `
+
+              <div class="bd-bar-row">
+
+                <div class="top">
+
+                  <span>
+                    ${category.label}
+                  </span>
+
+                  <span class="n">
+                    ${percentage}%
+                  </span>
+
+                </div>
+
+
+                <div class="bd-bar-track">
+
+                  <div
+                    class="bd-bar-fill gold"
+                    style="
+                      width:${percentage}%
+                    "
+                  ></div>
+
+                </div>
+
+              </div>
+
+            `;
+
+          }
+        )
+        .join("")
+    }
+
+
+    <div class="bd-section-title">
+      🕐 Pedidos por franja horaria
+    </div>
+
+
+    ${
+      HOUR_BUCKETS
+        .map(
+          (bucket,index) => `
+
+          <div class="bd-bar-row">
+
+            <div class="top">
+
+              <span>
+                ${bucket.label}
+              </span>
+
+              <span class="n">
+                ${bucketCount[index]}
+              </span>
+
+            </div>
+
+
+            <div class="bd-bar-track">
+
+              <div
+                class="bd-bar-fill"
+                style="
+                  width:${Math.round(
+                    bucketCount[index] /
+                    maxBucket *
+                    100
+                  )}%
+                "
+              ></div>
+
+            </div>
+
+          </div>
+
+          `
+        )
+        .join("")
+    }
+
+
+    <div class="bd-insight">
+
+      🔎
+
+      <b>
+        ${topProductName}
+      </b>
+
+      es el producto más pedido
+      en este periodo.
+
+      Conviene asegurar que nunca
+      falte en stock.
+
+    </div>
+
+
+    <div class="bd-insight">
+
+      🔎 La mayor parte de los
+      pedidos llega en la franja
+
+      <b>
+        ${HOUR_BUCKETS[topBucketIdx].label}
+      </b>.
+
+      Se podría reforzar la atención
+      o preparar los productos más
+      pedidos con anticipación en
+      ese horario.
+
+    </div>
+
+
+    <div class="bd-action-row">
+
+      <button
+        class="lock-again"
+        id="lockAgain"
+      >
+        🔒 Cerrar panel
+      </button>
+
+
+      <button
+        class="lock-again danger"
+        id="wipeData"
+      >
+        🗑️ Borrar todo el historial
+      </button>
+
+    </div>
+
+    `;
+
+
+  /* ACTIVAR BOTONES */
+
+  bdWireFilterButtons();
+
+  bdWireActions();
+
+}
+
+
+/* =========================================================
+   BOTONES DE FILTRO
+========================================================= */
+
+function bdWireFilterButtons(){
+
+  const buttons =
+    document.querySelectorAll(
+      ".bd-filter-btn"
+    );
+
+
+  buttons.forEach(
+    button => {
+
+      button.onclick = () => {
+
+        currentPeriod =
+          button.dataset.period;
+
+
+        bdRender();
+
+      };
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   BOTONES DEL PANEL
+========================================================= */
+
+function bdWireActions(){
+
+  const lockButton =
+    document.getElementById(
+      "lockAgain"
+    );
+
+
+  const wipeButton =
+    document.getElementById(
+      "wipeData"
+    );
+
+
+  /* =========================
+     CERRAR PANEL
+  ========================= */
+
+  if(lockButton){
+
+    lockButton.onclick = () => {
+
+      sessionStorage.removeItem(
+        "bd_unlocked"
+      );
+
+
+      document.getElementById(
+        "panel"
+      ).style.display = "none";
+
+
+      document.getElementById(
+        "lockScreen"
+      ).style.display = "block";
+
+
+      document.getElementById(
+        "pinInput"
+      ).value = "";
+
+
+      document.getElementById(
+        "pinError"
+      ).style.display = "none";
+
+    };
+
+  }
+
+
+  /* =========================
+     BORRAR HISTORIAL
+  ========================= */
+
+  if(wipeButton){
+
+    wipeButton.onclick = () => {
+
+      const ok =
+        confirm(
+          "¿Seguro que quieres borrar TODOS los pedidos guardados? " +
+          "Esto no se puede deshacer."
+        );
+
+
+      if(!ok){
+
+        return;
+
+      }
+
+
+      /* BORRAR PEDIDOS */
+
+      localStorage.removeItem(
+        BD_KEY
+      );
+
+
+      /* BORRAR MARCA DE DATOS */
+
+      localStorage.removeItem(
+        BD_SEED_FLAG
+      );
+
+
+      /* VOLVER A MOSTRAR PANEL */
+
+      bdRender();
+
+    };
+
+  }
+
+}
+
+
+/* =========================================================
+   DESBLOQUEAR PANEL
+========================================================= */
+
+function unlock(){
+
+  document.getElementById(
+    "lockScreen"
+  ).style.display = "none";
+
+
+  document.getElementById(
+    "panel"
+  ).style.display = "block";
+
+
+  bdRender();
+
+}
+
+
+/* =========================================================
+   BOTÓN ENTRAR
+========================================================= */
+
+document.getElementById(
+  "pinBtn"
+).onclick = () => {
+
+  const val =
+    document.getElementById(
+      "pinInput"
+    ).value.trim();
+
+
+  if(
+    val === ADMIN_PIN
+  ){
+
+    sessionStorage.setItem(
+      "bd_unlocked",
+      "1"
+    );
+
+
+    document.getElementById(
+      "pinError"
+    ).style.display = "none";
+
+
+    unlock();
+
+  }else{
+
+    document.getElementById(
+      "pinError"
+    ).style.display = "block";
+
+  }
+
+};
+
+
+/* =========================================================
+   ENTER EN EL PIN
+========================================================= */
+
+document.getElementById(
+  "pinInput"
+).addEventListener(
+  "keydown",
+  event => {
+
+    if(
+      event.key === "Enter"
+    ){
+
+      document.getElementById(
+        "pinBtn"
+      ).click();
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   INICIO
+========================================================= */
+
+/*
+  Genera datos de demostración solamente
+  la primera vez.
+*/
+
+bdSeedIfNeeded();
+
+
+/*
+  Si ya estaba desbloqueado
+  durante esta sesión, abrir panel.
+*/
+
+if(
+  sessionStorage.getItem(
+    "bd_unlocked"
+  ) === "1"
+){
+
+  unlock();
+
+}
+
+</script>
+
+</body>
+</html>

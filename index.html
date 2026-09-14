@@ -882,11 +882,34 @@ confirmPayBtn.onclick = () => {
     const name = payerNameInput.value.trim();
     if (name) msg += `\nPagado por: ${name}`;
   }
+    
   msg += "\n\n¡Gracias!";
+  logOrder(entries, cartTotalValue(), methodLabel);
   const url = `https://wa.me/${933203806}?text=${encodeURIComponent(msg)}`;
   window.open(url, "_blank");
   closeCheckout();
 };
+// ------- Big Data: registrar cada pedido -------
+const BD_KEY = "bc_orders_v1";
+
+function bdGetOrders(){
+  try { return JSON.parse(localStorage.getItem(BD_KEY)) || []; }
+  catch(e){ return []; }
+}
+function bdSaveOrders(orders){
+  try { localStorage.setItem(BD_KEY, JSON.stringify(orders)); }
+  catch(e){ /* no disponible */ }
+}
+function logOrder(entries, total, methodLabel){
+  const orders = bdGetOrders();
+  orders.push({
+    ts: Date.now(),
+    total: total,
+    method: methodLabel,
+    items: entries.map(e => ({ id:e.id, name:e.name, cat:e.cat, qty:e.qty, price:e.price })),
+  });
+  bdSaveOrders(orders);
+}
 
 renderCats();
 renderProducts();
