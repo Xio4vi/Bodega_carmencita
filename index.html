@@ -28,6 +28,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     --gold:#F2A93C;
     --gold-dark:#C77E12;
     --border:#E7E9EE;
+    --danger:#C4593B;
     --radius:18px;
   }
   *{box-sizing:border-box;}
@@ -59,11 +60,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     color:#fff;
     padding:24px 20px 0;
   }
-  .brand-row{
-    display:flex;
-    align-items:center;
-    gap:13px;
-  }
+  .brand-row{display:flex; align-items:center; gap:13px;}
   .brand-mark{
     width:50px;height:50px;border-radius:50%;
     background:#fff;
@@ -111,7 +108,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     flex-shrink:0;font-size:13px;
   }
 
-  /* Toldo — franja diagonal azul y blanco, como el toldo de la bodega */
+  /* Toldo — franja diagonal azul y blanco */
   .awning{
     height:11px;
     margin-top:18px;
@@ -172,8 +169,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     display:flex;
     flex-direction:column;
     position:relative;
-    transition:border-color .15s ease;
+    transition:border-color .15s ease, opacity .15s ease;
   }
+  .card.agotado{opacity:0.55;}
   .card .icon-slot{
     width:100%;
     aspect-ratio:1.3/1;
@@ -184,12 +182,26 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     line-height:1;
     margin-bottom:10px;
     overflow:hidden;
+    position:relative;
   }
   .card .icon-slot img{
     width:100%;height:100%;
     object-fit:cover;
     display:block;
   }
+  .stock-badge{
+    position:absolute;
+    top:6px;
+    left:6px;
+    padding:3px 8px;
+    border-radius:999px;
+    font-size:10px;
+    font-weight:800;
+    color:#fff;
+    letter-spacing:0.2px;
+  }
+  .stock-badge.out{background:var(--danger);}
+  .stock-badge.low{background:var(--gold-dark);}
   .card .name{
     font-size:14px;
     font-weight:700;
@@ -228,6 +240,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     transition:transform .1s ease;
   }
   .add-btn:active{transform:scale(0.9);}
+  .add-btn:disabled{background:#B9C2CC; cursor:not-allowed;}
+
+  .out-label{
+    font-size:11.5px;
+    font-weight:800;
+    color:var(--danger);
+  }
 
   .stepper{
     display:flex;
@@ -247,6 +266,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     font-weight:700;
     cursor:pointer;
   }
+  .stepper button:disabled{background:#B9C2CC; cursor:not-allowed;}
   .stepper span{
     font-size:13px;
     font-weight:700;
@@ -325,23 +345,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     display:flex;align-items:center;justify-content:space-between;
     border-bottom:1px solid var(--border);
   }
-  .drawer-head h2{
-    font-size:19px;margin:0;font-weight:800;color:var(--blue-dark);
-  }
-  .drawer-head button{
-    border:none;background:none;font-size:22px;color:var(--muted);cursor:pointer;
-  }
-  .drawer-items{
-    overflow-y:auto;
-    padding:8px 20px;
-    flex:1;
-  }
-  .empty-cart{
-    text-align:center;
-    color:var(--muted);
-    padding:40px 10px;
-    font-size:14px;
-  }
+  .drawer-head h2{font-size:19px;margin:0;font-weight:800;color:var(--blue-dark);}
+  .drawer-head button{border:none;background:none;font-size:22px;color:var(--muted);cursor:pointer;}
+  .drawer-items{overflow-y:auto; padding:8px 20px; flex:1;}
+  .empty-cart{text-align:center; color:var(--muted); padding:40px 10px; font-size:14px;}
   .drawer-item{
     display:flex;
     align-items:center;
@@ -356,11 +363,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     font-size:19px;flex-shrink:0;
     overflow:hidden;
   }
-  .drawer-item .icon-slot img{
-    width:100%;height:100%;
-    object-fit:cover;
-    display:block;
-  }
+  .drawer-item .icon-slot img{width:100%;height:100%;object-fit:cover;display:block;}
   .drawer-item .info{flex:1;min-width:0;}
   .drawer-item .info .n{font-size:13.5px;font-weight:700;}
   .drawer-item .info .p{font-size:12px;color:var(--muted);}
@@ -374,10 +377,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     border-top:1px solid var(--border);
     background:var(--cream);
   }
-  .totals-row{
-    display:flex;justify-content:space-between;align-items:baseline;
-    margin-bottom:12px;
-  }
+  .totals-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;}
   .totals-row .l{font-size:14px;color:var(--muted);font-weight:600;}
   .totals-row .v{font-size:24px;font-weight:800;color:var(--blue-dark);}
   .wa-btn{
@@ -402,153 +402,128 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     line-height:1.4;
   }
 
-  footer{
-    text-align:center;
-    padding:18px 20px 8px;
-    color:var(--muted);
-    font-size:11.5px;
+  footer{text-align:center; padding:18px 20px 8px; color:var(--muted); font-size:11.5px;}
+
+  /* Pantalla de checkout (método de pago) */
+  .screen{
+    position:fixed;
+    left:50%;
+    transform:translateX(-50%) translateY(100%);
+    bottom:0;
+    width:100%;
+    max-width:480px;
+    height:100%;
+    max-height:100vh;
+    background:var(--cream);
+    z-index:50;
+    display:flex;
+    flex-direction:column;
+    transition:transform .28s ease;
   }
-  /* ---------- PASO 1: pantalla de checkout (método de pago) ---------- */
-.screen{
-  position:fixed;
-  left:50%;
-  transform:translateX(-50%) translateY(100%);
-  bottom:0;
-  width:100%;
-  max-width:480px;
-  height:100%;
-  max-height:100vh;
-  background:var(--cream);
-  z-index:50;
-  display:flex;
-  flex-direction:column;
-  transition:transform .28s ease;
-}
-.screen.show{transform:translateX(-50%) translateY(0);}
-.screen-head{
-  padding:18px 20px 14px;
-  display:flex;align-items:center;gap:12px;
-  background:linear-gradient(160deg, var(--blue) 0%, var(--blue-dark) 100%);
-  color:#fff;
-}
-.screen-head button{
-  border:none;background:rgba(255,255,255,0.16);color:#fff;
-  width:34px;height:34px;border-radius:10px;font-size:17px;cursor:pointer;
-  flex-shrink:0;
-}
-.screen-head h2{margin:0;font-size:18px;font-weight:800;}
-.screen-body{
-  flex:1;
-  overflow-y:auto;
-  padding:18px 20px 20px;
-}
-.pay-summary{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:14px 16px;
-  display:flex;justify-content:space-between;align-items:center;
-  margin-bottom:18px;
-}
-.pay-summary .l{font-size:13px;color:var(--muted);font-weight:600;}
-.pay-summary .v{font-size:20px;font-weight:800;color:var(--blue-dark);}
-.pay-label{font-size:13.5px;font-weight:800;color:var(--blue-dark);margin:0 0 10px;}
-.pay-options{display:flex;flex-direction:column;gap:10px;margin-bottom:18px;}
-.pay-opt{
-  display:flex;align-items:center;gap:12px;
-  background:var(--card);
-  border:1.5px solid var(--border);
-  border-radius:14px;
-  padding:13px 14px;
-  cursor:pointer;
-  transition:border-color .15s ease, background .15s ease;
-}
-.pay-opt.active{
-  border-color:var(--blue);
-  background:var(--sky);
-}
-.pay-opt .ic{
-  width:36px;height:36px;border-radius:10px;
-  background:var(--sky);
-  display:flex;align-items:center;justify-content:center;
-  font-size:18px;flex-shrink:0;
-}
-.pay-opt.active .ic{background:#fff;}
-.pay-opt .txt b{display:block;font-size:14px;color:var(--ink);}
-.pay-opt .txt span{font-size:12px;color:var(--muted);}
-.pay-detail{
-  background:var(--sky);
-  border-radius:14px;
-  padding:14px 16px;
-  font-size:13px;
-  color:var(--blue-dark);
-  line-height:1.55;
-  margin-bottom:18px;
-}
-.pay-detail b{color:var(--blue-dark);}
-.screen-foot{
-  padding:14px 20px 22px;
-  border-top:1px solid var(--border);
-  background:var(--cream);
-}
-.payer-fields{margin-bottom:18px;}
-.payer-input{
-  width:100%;
-  border:1.5px solid var(--border);
-  border-radius:12px;
-  padding:12px 14px;
-  font-size:14px;
-  font-family:'Inter', sans-serif;
-  color:var(--ink);
-  margin-bottom:10px;
-  background:var(--card);
-}
-.payer-input:focus{outline:none;border-color:var(--blue);}
-.confirm-btn{
-  width:100%;
-  background:var(--blue);
-  color:#fff;
-  border:none;
-  border-radius:14px;
-  padding:15px;
-  font-size:15.5px;
-  font-weight:700;
-  font-family:'Inter', sans-serif;
-  cursor:pointer;
-}
-.proof-note{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  text-align:center;
-  gap:10px;
-  background:var(--card);
-  border:1.5px dashed var(--gold);
-  border-radius:14px;
-  padding:16px 16px 14px;
-  margin-bottom:18px;
-}
-.proof-avatar{
-  width:96px;height:96px;
-  border-radius:50%;
-  object-fit:cover;
-  border:3px solid var(--gold);
-}
-.proof-note p{
-  margin:0;
-  font-size:13.5px;
-  color:var(--ink);
-  line-height:1.55;
-  max-width:280px;
-}
-.confirm-btn:disabled{background:#B9C2CC;cursor:not-allowed;}
+  .screen.show{transform:translateX(-50%) translateY(0);}
+  .screen-head{
+    padding:18px 20px 14px;
+    display:flex;align-items:center;gap:12px;
+    background:linear-gradient(160deg, var(--blue) 0%, var(--blue-dark) 100%);
+    color:#fff;
+  }
+  .screen-head button{
+    border:none;background:rgba(255,255,255,0.16);color:#fff;
+    width:34px;height:34px;border-radius:10px;font-size:17px;cursor:pointer;
+    flex-shrink:0;
+  }
+  .screen-head h2{margin:0;font-size:18px;font-weight:800;}
+  .screen-body{flex:1; overflow-y:auto; padding:18px 20px 20px;}
+  .pay-summary{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:14px 16px;
+    display:flex;justify-content:space-between;align-items:center;
+    margin-bottom:18px;
+  }
+  .pay-summary .l{font-size:13px;color:var(--muted);font-weight:600;}
+  .pay-summary .v{font-size:20px;font-weight:800;color:var(--blue-dark);}
+  .pay-label{font-size:13.5px;font-weight:800;color:var(--blue-dark);margin:0 0 10px;}
+  .pay-options{display:flex;flex-direction:column;gap:10px;margin-bottom:18px;}
+  .pay-opt{
+    display:flex;align-items:center;gap:12px;
+    background:var(--card);
+    border:1.5px solid var(--border);
+    border-radius:14px;
+    padding:13px 14px;
+    cursor:pointer;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .pay-opt.active{border-color:var(--blue); background:var(--sky);}
+  .pay-opt .ic{
+    width:36px;height:36px;border-radius:10px;
+    background:var(--sky);
+    display:flex;align-items:center;justify-content:center;
+    font-size:18px;flex-shrink:0;
+  }
+  .pay-opt.active .ic{background:#fff;}
+  .pay-opt .txt b{display:block;font-size:14px;color:var(--ink);}
+  .pay-opt .txt span{font-size:12px;color:var(--muted);}
+  .pay-detail{
+    background:var(--sky);
+    border-radius:14px;
+    padding:14px 16px;
+    font-size:13px;
+    color:var(--blue-dark);
+    line-height:1.55;
+    margin-bottom:18px;
+  }
+  .pay-detail b{color:var(--blue-dark);}
+  .screen-foot{padding:14px 20px 22px; border-top:1px solid var(--border); background:var(--cream);}
+  .payer-fields{margin-bottom:18px;}
+  .payer-input{
+    width:100%;
+    border:1.5px solid var(--border);
+    border-radius:12px;
+    padding:12px 14px;
+    font-size:14px;
+    font-family:'Inter', sans-serif;
+    color:var(--ink);
+    margin-bottom:10px;
+    background:var(--card);
+  }
+  .payer-input:focus{outline:none; border-color:var(--blue);}
+  .confirm-btn{
+    width:100%;
+    background:var(--blue);
+    color:#fff;
+    border:none;
+    border-radius:14px;
+    padding:15px;
+    font-size:15.5px;
+    font-weight:700;
+    font-family:'Inter', sans-serif;
+    cursor:pointer;
+  }
+  .confirm-btn:disabled{background:#B9C2CC;cursor:not-allowed;}
+  .proof-note{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    gap:10px;
+    background:var(--card);
+    border:1.5px dashed var(--gold);
+    border-radius:14px;
+    padding:16px 16px 14px;
+    margin-bottom:18px;
+  }
+  .proof-avatar{width:96px;height:96px; border-radius:50%; object-fit:cover; border:3px solid var(--gold);}
+  .proof-note p{margin:0; font-size:13.5px; color:var(--ink); line-height:1.55; max-width:280px;}
 </style>
 </head>
 <body>
-  <!-- Google Tag Manager (noscript) -->
+<!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5F3QFSC6"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
+
 <div class="wrap">
 
   <header>
@@ -581,6 +556,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 
 <div class="overlay" id="overlay"></div>
+
 <div class="drawer" id="drawer">
   <div class="drawer-handle"></div>
   <div class="drawer-head">
@@ -599,7 +575,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <p class="drawer-note">Al enviar, se abrirá WhatsApp con tu pedido ya escrito.<br>Coordinas el pago (Yape/Plin) y la entrega directamente con la bodega.</p>
   </div>
 </div>
-<!-- PASO 1: Pantalla de checkout — elegir método de pago -->
+
+<!-- Pantalla de checkout — elegir método de pago -->
 <div class="screen" id="checkoutScreen">
   <div class="screen-head">
     <button id="checkoutBack">←</button>
@@ -615,60 +592,112 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="pay-detail" id="payDetail"></div>
     <div class="payer-fields" id="payerFields" style="display:none;">
       <div class="proof-note" id="proofNote" style="display:none;">
-  <img src="carmencita.png" alt="Bodega Carmencita" class="proof-avatar" onerror="this.style.display='none'">
-  <p>📸 Envíame la <b>captura de tu pago</b> junto con tu pedido por WhatsApp, así te confirmo más rápido. ¡Gracias! 😊</p>
-</div>
-  <p class="pay-label">Tus datos para el Yape/Plin</p>
-  <input type="text" id="payerName" class="payer-input" placeholder="Nombre de quien va a yapear/plinear">
-</div>
+        <img src="carmencita.png" alt="Bodega Carmencita" class="proof-avatar" onerror="this.style.display='none'">
+        <p>📸 Envíame la <b>captura de tu pago</b> junto con tu pedido por WhatsApp, así te confirmo más rápido. ¡Gracias! 😊</p>
+      </div>
+      <p class="pay-label">Tus datos para el Yape/Plin</p>
+      <input type="text" id="payerName" class="payer-input" placeholder="Nombre de quien va a yapear/plinear">
+    </div>
   </div>
   <div class="screen-foot">
     <button class="confirm-btn" id="confirmPayBtn">Ya pagué / confirmar pedido</button>
   </div>
 </div>
+
 <script>
-// ------- CONFIGURA AQUÍ EL NÚMERO DE WHATSAPP DE LA BODEGA -------
-// Formato: código de país + número, sin "+" ni espacios. Ej: Perú = 51 9XXXXXXXX
-const WHATSAPP_NUMBER = "51900000000";
-// -------------------------------------------------------------------
+/* =========================================================
+   CONFIGURACIÓN
+========================================================= */
+
+// Número de WhatsApp de la bodega (código de país + número, sin "+" ni espacios)
+const WHATSAPP_NUMBER = "51933203806";
 
 const CATEGORIES = [
   { id: "abarrotes", label: "🥫 Abarrotes" },
-  { id: "bebidas", label: "🥤 Bebidas" },
-  { id: "frescos", label: "🥬 Frescos" },
-  { id: "limpieza", label: "🧼 Limpieza" },
+  { id: "bebidas",   label: "🥤 Bebidas" },
+  { id: "frescos",   label: "🥬 Frescos" },
+  { id: "limpieza",  label: "🧼 Limpieza" },
 ];
 
-// Para cada producto, pega la URL de su foto en "img".
-// Si dejas "img" vacío (""), se muestra el emoji como respaldo.
-const PRODUCTS = [
-  { id: 1, name: "Arroz Costeño", unit: "Bolsa 750g", price: 4.50, emoji: "🍚", img: "https://mercury.vteximg.com.br/arquivos/ids/6347794/image-40dbeaca38084e4199eb819cc76ec10d.jpg?v=637835775920800000", cat: "abarrotes" },
-  { id: 2, name: "Azúcar rubia", unit: "Bolsa 1kg", price: 4.20, emoji: "🍯", img: "https://http2.mlstatic.com/D_NQ_NP_863241-MLU89084492335_072025-O.webp", cat: "abarrotes" },
-  { id: 3, name: "Aceite Primor", unit: "Botella 1L", price: 9.90, emoji: "🫙", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToYhFzzVhcZBsH5ujPj6VeGwPiXCJ1l1k-j0IA3NmuQOLMU_eJawTjH5M&s=10", cat: "abarrotes" },
-  { id: 4, name: "Fideos spaghetti marca sayon", unit: "Paquete 500g", price: 3.20, emoji: "🍝", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUA8DjIaqQqVp_jhMuXA8uLECwMFlvvG7SZ48JWABFEnUOG8alNvPJORSD&s=10", cat: "abarrotes" },
-  { id: 5, name: "Atún Florida", unit: "Lata 170g", price: 5.50, emoji: "🥫", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnE_jfbogYjLJDxHpMJdr0mDtcJBKfV-Y5G6PO2FY_FsinldSFvMNILfON&s=10", cat: "abarrotes" },
-  { id: 6, name: "Leche Gloria", unit: "Tarro 400g", price: 4.80, emoji: "🥛", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDSZ0LMy0M66UT7fZsKRdqiOiuAucy96mhADsOV2boHL0JLJ8_3cqoyes&s=10", cat: "abarrotes" },
-  { id: 7, name: "Inca Kola", unit: "Botella 1.5L", price: 7.00, emoji: "🥤", img: "https://bodegamiguelito.com/wp-content/uploads/2024/12/7801610231517_1.webp", cat: "bebidas" },
-  { id: 8, name: "Agua San Luis", unit: "Botella 750ml", price: 2.00, emoji: "💧", img: "https://tofuu.getjusto.com/orioneat-local/resized2/xSQoMppE43ufhQxuE-2400-x.webp", cat: "bebidas" },
-  { id: 9, name: "Jugo Frugos", unit: "Caja 1L", price: 5.50, emoji: "🧃", img: "https://media.falabella.com/tottusPE/41057705_1/public", cat: "bebidas" },
-  { id: 10, name: "Tomate", unit: "Kilo", price: 3.50, emoji: "🍅", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTztjP-Oy4KDhgTk2Kp44tiejyuBJfX5hRfD8YXKdJOaXYlJ36grx4mL08&s=10", cat: "frescos" },
-  { id: 11, name: "Cebolla roja", unit: "Kilo", price: 3.00, emoji: "🧅", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5EuYe1C9LUvIftOF72twmo2o2Wf8tRbA4syfdPR0HocITP20IvcBj150&s=10", cat: "frescos" },
-  { id: 12, name: "Palta fuerte", unit: "Kilo", price: 6.00, emoji: "🥑", img: "https://sites.peru.info/DesktopModules/BB_LA_Superfood_Home/Images/Palta/hortalizas-palta-detalle.jpg", cat: "frescos" },
-  { id: 13, name: "Plátano de seda", unit: "Kilo", price: 3.20, emoji: "🍌", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBQYtupzAtVg3DcEkboajqxOQVW3S9J6CmlzOGQ6LNsmV9CqH9r5t2oZg&s=10", cat: "frescos" },
-  { id: 14, name: "Papa amarilla", unit: "Kilo", price: 3.80, emoji: "🥔", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzbhPJe2QzeWwZ5Tt-tJoYR4ZcMa2mA10T6qAv0wZCGACKMhBmikWBjnmB&s=10", cat: "frescos" },
-  { id: 15, name: "Detergente Bolívar", unit: "Bolsa 720g", price: 6.50, emoji: "🧴", img: "https://assets.bo-management.cord.pe/public/images/954ba3e9-e7dc-404b-a8ad-f0f6d0f80d4e-20423854_6.jpeg", cat: "limpieza" },
-  { id: 16, name: "Lejía Clorox", unit: "Botella 0.680L", price: 2.00, emoji: "🧽", img: "https://vegaperu.vtexassets.com/arquivos/ids/168702/750121.jpg?v=638798146937600000", cat: "limpieza" },
-  { id: 17, name: "Jabón Bolivar", unit: "Unidad", price: 2.30, emoji: "🧼", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJQ94FZW4UEyzWDyybhJgt5mT52dtTXDpjrEEAq6V7w-_vYcoCNUi-Iw4f&s=10", cat: "limpieza" },
+// Umbral para mostrar el aviso "¡Últimas X!"
+const LOW_STOCK_THRESHOLD = 3;
+
+/* =========================================================
+   CATÁLOGO DE PRODUCTOS
+   - DEFAULT_PRODUCTS solo se usa UNA VEZ, para sembrar el
+     catálogo real la primera vez que se abre la página.
+   - Después de eso, el catálogo que se usa siempre es el que
+     está guardado en localStorage (PRODUCTS_KEY), y se edita
+     desde admin.html (pestaña "Productos").
+   - Debe ser IDÉNTICO al array DEFAULT_PRODUCTS de admin.html
+     para que ambos archivos siembren los mismos datos.
+========================================================= */
+
+const PRODUCTS_KEY = "bc_products_v1";
+const PRODUCTS_SEED_FLAG = "bc_products_seeded_v1";
+
+const DEFAULT_PRODUCTS = [
+  { id: 1,  name: "Arroz Costeño",               unit: "Bolsa 750g",     price: 4.50, emoji: "🍚", img: "https://mercury.vteximg.com.br/arquivos/ids/6347794/image-40dbeaca38084e4199eb819cc76ec10d.jpg?v=637835775920800000", cat: "abarrotes", stock: 20 },
+  { id: 2,  name: "Azúcar rubia",                unit: "Bolsa 1kg",      price: 4.20, emoji: "🍯", img: "https://http2.mlstatic.com/D_NQ_NP_863241-MLU89084492335_072025-O.webp", cat: "abarrotes", stock: 20 },
+  { id: 3,  name: "Aceite Primor",                unit: "Botella 1L",     price: 9.90, emoji: "🫙", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToYhFzzVhcZBsH5ujPj6VeGwPiXCJ1l1k-j0IA3NmuQOLMU_eJawTjH5M&s=10", cat: "abarrotes", stock: 20 },
+  { id: 4,  name: "Fideos spaghetti marca sayon", unit: "Paquete 500g",   price: 3.20, emoji: "🍝", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUA8DjIaqQqVp_jhMuXA8uLECwMFlvvG7SZ48JWABFEnUOG8alNvPJORSD&s=10", cat: "abarrotes", stock: 20 },
+  { id: 5,  name: "Atún Florida",                 unit: "Lata 170g",      price: 5.50, emoji: "🥫", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnE_jfbogYjLJDxHpMJdr0mDtcJBKfV-Y5G6PO2FY_FsinldSFvMNILfON&s=10", cat: "abarrotes", stock: 20 },
+  { id: 6,  name: "Leche Gloria",                 unit: "Tarro 400g",     price: 4.80, emoji: "🥛", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDSZ0LMy0M66UT7fZsKRdqiOiuAucy96mhADsOV2boHL0JLJ8_3cqoyes&s=10", cat: "abarrotes", stock: 20 },
+  { id: 7,  name: "Inca Kola",                    unit: "Botella 1.5L",   price: 7.00, emoji: "🥤", img: "https://bodegamiguelito.com/wp-content/uploads/2024/12/7801610231517_1.webp", cat: "bebidas", stock: 20 },
+  { id: 8,  name: "Agua San Luis",                unit: "Botella 750ml",  price: 2.00, emoji: "💧", img: "https://tofuu.getjusto.com/orioneat-local/resized2/xSQoMppE43ufhQxuE-2400-x.webp", cat: "bebidas", stock: 20 },
+  { id: 9,  name: "Jugo Frugos",                  unit: "Caja 1L",        price: 5.50, emoji: "🧃", img: "https://media.falabella.com/tottusPE/41057705_1/public", cat: "bebidas", stock: 20 },
+  { id: 10, name: "Tomate",                       unit: "Kilo",           price: 3.50, emoji: "🍅", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTztjP-Oy4KDhgTk2Kp44tiejyuBJfX5hRfD8YXKdJOaXYlJ36grx4mL08&s=10", cat: "frescos", stock: 20 },
+  { id: 11, name: "Cebolla roja",                 unit: "Kilo",           price: 3.00, emoji: "🧅", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5EuYe1C9LUvIftOF72twmo2o2Wf8tRbA4syfdPR0HocITP20IvcBj150&s=10", cat: "frescos", stock: 20 },
+  { id: 12, name: "Palta fuerte",                 unit: "Kilo",           price: 6.00, emoji: "🥑", img: "https://sites.peru.info/DesktopModules/BB_LA_Superfood_Home/Images/Palta/hortalizas-palta-detalle.jpg", cat: "frescos", stock: 20 },
+  { id: 13, name: "Plátano de seda",               unit: "Kilo",           price: 3.20, emoji: "🍌", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBQYtupzAtVg3DcEkboajqxOQVW3S9J6CmlzOGQ6LNsmV9CqH9r5t2oZg&s=10", cat: "frescos", stock: 20 },
+  { id: 14, name: "Papa amarilla",                unit: "Kilo",           price: 3.80, emoji: "🥔", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzbhPJe2QzeWwZ5Tt-tJoYR4ZcMa2mA10T6qAv0wZCGACKMhBmikWBjnmB&s=10", cat: "frescos", stock: 20 },
+  { id: 15, name: "Detergente Bolívar",           unit: "Bolsa 720g",     price: 6.50, emoji: "🧴", img: "https://assets.bo-management.cord.pe/public/images/954ba3e9-e7dc-404b-a8ad-f0f6d0f80d4e-20423854_6.jpeg", cat: "limpieza", stock: 20 },
+  { id: 16, name: "Lejía Clorox",                 unit: "Botella 0.680L", price: 2.00, emoji: "🧽", img: "https://vegaperu.vtexassets.com/arquivos/ids/168702/750121.jpg?v=638798146937600000", cat: "limpieza", stock: 20 },
+  { id: 17, name: "Jabón Bolivar",                unit: "Unidad",         price: 2.30, emoji: "🧼", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJQ94FZW4UEyzWDyybhJgt5mT52dtTXDpjrEEAq6V7w-_vYcoCNUi-Iw4f&s=10", cat: "limpieza", stock: 20 },
 ];
+
+function pGetProducts(){
+  try {
+    const data = JSON.parse(localStorage.getItem(PRODUCTS_KEY));
+    return Array.isArray(data) ? data : [];
+  } catch(e){
+    return [];
+  }
+}
+
+function pSaveProducts(list){
+  try {
+    localStorage.setItem(PRODUCTS_KEY, JSON.stringify(list));
+  } catch(e){
+    /* almacenamiento no disponible */
+  }
+}
+
+function pSeedIfNeeded(){
+  if (localStorage.getItem(PRODUCTS_SEED_FLAG)) return;
+  pSaveProducts(DEFAULT_PRODUCTS);
+  localStorage.setItem(PRODUCTS_SEED_FLAG, "1");
+}
+
+// Catálogo real que usa la página (se carga desde localStorage al iniciar)
+let PRODUCTS = [];
 
 // Devuelve el HTML del icono/foto de un producto: usa la imagen si existe,
 // y si falla al cargar o no hay URL, cae de vuelta al emoji.
 function productIconHtml(p){
   if (p.img && p.img.trim() !== "") {
-    return `<img src="${p.img}" alt="${p.name}" onerror="this.parentElement.innerHTML='${p.emoji}'">`;
+    return `<img src="${p.img}" alt="${p.name}" onerror="this.parentElement.innerHTML='${p.emoji || "🛒"}'">`;
   }
-  return p.emoji;
+  return p.emoji || "🛒";
 }
+
+function stockOf(p){
+  return Number(p.stock) || 0;
+}
+
+/* =========================================================
+   ESTADO DE LA PÁGINA
+========================================================= */
 
 let activeCat = "todos";
 let cart = {}; // { productId: qty }
@@ -684,7 +713,11 @@ const drawerItems = document.getElementById("drawerItems");
 const drawerTotal = document.getElementById("drawerTotal");
 const sendBtn = document.getElementById("sendBtn");
 
-function money(n){ return "S/ " + n.toFixed(2); }
+function money(n){ return "S/ " + Number(n).toFixed(2); }
+
+/* =========================================================
+   CATEGORÍAS Y GRID DE PRODUCTOS
+========================================================= */
 
 function renderCats(){
   catsEl.innerHTML = "";
@@ -700,9 +733,12 @@ function renderCats(){
 function renderProducts(){
   mainEl.innerHTML = "";
   const list = PRODUCTS.filter(p => activeCat === "todos" || p.cat === activeCat);
+
   const label = document.createElement("div");
   label.className = "section-label";
-  label.textContent = activeCat === "todos" ? "Todos los productos" : CATEGORIES.find(c=>c.id===activeCat).label.replace(/^\S+\s/, "");
+  label.textContent = activeCat === "todos"
+    ? "Todos los productos"
+    : CATEGORIES.find(c => c.id === activeCat).label.replace(/^\S+\s/, "");
   mainEl.appendChild(label);
 
   const grid = document.createElement("div");
@@ -710,10 +746,18 @@ function renderProducts(){
 
   list.forEach(p => {
     const qty = cart[p.id] || 0;
+    const stock = stockOf(p);
+    const agotado = stock <= 0;
+    const bajo = !agotado && stock <= LOW_STOCK_THRESHOLD;
+
     const card = document.createElement("div");
-    card.className = "card";
+    card.className = "card" + (agotado ? " agotado" : "");
     card.innerHTML = `
-      <div class="icon-slot">${productIconHtml(p)}</div>
+      <div class="icon-slot">
+        ${productIconHtml(p)}
+        ${agotado ? `<span class="stock-badge out">Agotado</span>` : ""}
+        ${bajo ? `<span class="stock-badge low">¡Últimas ${stock}!</span>` : ""}
+      </div>
       <p class="name">${p.name}</p>
       <p class="unit">${p.unit}</p>
       <div class="bottom-row">
@@ -721,13 +765,17 @@ function renderProducts(){
         <div class="qty-slot"></div>
       </div>
     `;
+
     const slot = card.querySelector(".qty-slot");
-    if (qty > 0) {
+
+    if (agotado) {
+      slot.innerHTML = `<span class="out-label">Agotado</span>`;
+    } else if (qty > 0) {
       slot.innerHTML = `
         <div class="stepper">
           <button data-act="minus">−</button>
           <span>${qty}</span>
-          <button data-act="plus">+</button>
+          <button data-act="plus" ${qty >= stock ? "disabled" : ""}>+</button>
         </div>`;
       slot.querySelector('[data-act="minus"]').onclick = () => changeQty(p.id, -1);
       slot.querySelector('[data-act="plus"]').onclick = () => changeQty(p.id, 1);
@@ -735,6 +783,7 @@ function renderProducts(){
       slot.innerHTML = `<button class="add-btn">+</button>`;
       slot.querySelector(".add-btn").onclick = () => changeQty(p.id, 1);
     }
+
     grid.appendChild(card);
   });
 
@@ -742,14 +791,23 @@ function renderProducts(){
 }
 
 function changeQty(id, delta){
+  const product = PRODUCTS.find(p => p.id === id);
+  const stock = product ? stockOf(product) : 0;
   const current = cart[id] || 0;
-  const next = current + delta;
+  let next = current + delta;
+
+  if (next > stock) next = stock;
   if (next <= 0) delete cart[id];
   else cart[id] = next;
+
   renderProducts();
   renderCartBar();
   renderDrawer();
 }
+
+/* =========================================================
+   CARRITO
+========================================================= */
 
 function cartEntries(){
   return Object.entries(cart).map(([id, qty]) => {
@@ -764,7 +822,7 @@ function cartTotalValue(){
 
 function renderCartBar(){
   const entries = cartEntries();
-  const count = entries.reduce((s,i)=>s+i.qty,0);
+  const count = entries.reduce((s, i) => s + i.qty, 0);
   cartCount.textContent = count;
   cartTotal.textContent = money(cartTotalValue());
   cartBar.classList.toggle("show", count > 0);
@@ -773,7 +831,8 @@ function renderCartBar(){
 function renderDrawer(){
   const entries = cartEntries();
   drawerItems.innerHTML = "";
-  if (entries.length === 0){
+
+  if (entries.length === 0) {
     drawerItems.innerHTML = `<div class="empty-cart">Todavía no agregaste productos 🛒<br>Elige algo del catálogo para empezar.</div>`;
     sendBtn.disabled = true;
   } else {
@@ -788,11 +847,17 @@ function renderDrawer(){
         </div>
         <button class="remove">Quitar</button>
       `;
-      row.querySelector(".remove").onclick = () => { delete cart[item.id]; renderProducts(); renderCartBar(); renderDrawer(); };
+      row.querySelector(".remove").onclick = () => {
+        delete cart[item.id];
+        renderProducts();
+        renderCartBar();
+        renderDrawer();
+      };
       drawerItems.appendChild(row);
     });
     sendBtn.disabled = false;
   }
+
   drawerTotal.textContent = money(cartTotalValue());
 }
 
@@ -809,11 +874,14 @@ cartBar.onclick = openDrawer;
 document.getElementById("closeDrawer").onclick = closeDrawerFn;
 overlay.onclick = closeDrawerFn;
 
-// ------- PASO 1: checkout con método de pago -------
+/* =========================================================
+   CHECKOUT — MÉTODO DE PAGO
+========================================================= */
+
 const PAY_METHODS = [
-  { id: "yape", label: "Yape", icon: "📲", detail: "Yapea al <b>933 203 806</b> (Bodega Carmencita) y presiona el botón de abajo cuando lo hayas hecho." },
-  { id: "plin", label: "Plin", icon: "📲", detail: "Plinea al <b>933 203 806</b> (Bodega Carmencita) y presiona el botón de abajo cuando lo hayas hecho." },
-  { id: "efectivo", label: "Efectivo al recoger/entregar", icon: "💵", detail: "Pagas en efectivo cuando recojas tu pedido en la tienda o cuando te lo entreguen." },
+  { id: "yape",      label: "Yape", icon: "📲", detail: "Yapea al <b>933 203 806</b> (Bodega Carmencita) y presiona el botón de abajo cuando lo hayas hecho." },
+  { id: "plin",      label: "Plin", icon: "📲", detail: "Plinea al <b>933 203 806</b> (Bodega Carmencita) y presiona el botón de abajo cuando lo hayas hecho." },
+  { id: "efectivo",  label: "Efectivo al recoger/entregar", icon: "💵", detail: "Pagas en efectivo cuando recojas tu pedido en la tienda o cuando te lo entreguen." },
 ];
 let selectedPay = "yape";
 
@@ -822,10 +890,10 @@ const checkoutTotal = document.getElementById("checkoutTotal");
 const payOptionsEl = document.getElementById("payOptions");
 const payDetailEl = document.getElementById("payDetail");
 const confirmPayBtn = document.getElementById("confirmPayBtn");
-
 const payerFields = document.getElementById("payerFields");
 const payerNameInput = document.getElementById("payerName");
 const proofNote = document.getElementById("proofNote");
+
 function renderPayOptions(){
   payOptionsEl.innerHTML = "";
   PAY_METHODS.forEach(m => {
@@ -835,17 +903,16 @@ function renderPayOptions(){
     el.onclick = () => { selectedPay = m.id; renderPayOptions(); };
     payOptionsEl.appendChild(el);
   });
+
   const current = PAY_METHODS.find(m => m.id === selectedPay);
   payDetailEl.innerHTML = current.detail;
 
-  // Mostrar campos de nombre/número solo para Yape o Plin
-const needsPayerData = selectedPay === "yape" || selectedPay === "plin";
-payerFields.style.display = needsPayerData ? "block" : "none";
-proofNote.style.display = needsPayerData ? "flex" : "none";
-
-  // Texto del botón según el método
+  const needsPayerData = selectedPay === "yape" || selectedPay === "plin";
+  payerFields.style.display = needsPayerData ? "block" : "none";
+  proofNote.style.display = needsPayerData ? "flex" : "none";
   confirmPayBtn.textContent = needsPayerData ? "Ya pagué, enviar pedido" : "Confirmar pedido";
 }
+
 function openCheckout(){
   checkoutTotal.textContent = money(cartTotalValue());
   renderPayOptions();
@@ -859,16 +926,19 @@ function closeCheckout(){
 }
 document.getElementById("checkoutBack").onclick = closeCheckout;
 
-// El botón del drawer ahora abre el checkout en vez de enviar directo
 sendBtn.onclick = () => {
-  const entries = cartEntries();
-  if (entries.length === 0) return;
+  if (cartEntries().length === 0) return;
   openCheckout();
 };
+
+/* =========================================================
+   CONFIRMAR PEDIDO: enviar WhatsApp + descontar stock
+========================================================= */
 
 confirmPayBtn.onclick = () => {
   const entries = cartEntries();
   if (entries.length === 0) return;
+
   const methodLabel = PAY_METHODS.find(m => m.id === selectedPay).label;
   const needsPayerData = selectedPay === "yape" || selectedPay === "plin";
 
@@ -878,18 +948,43 @@ confirmPayBtn.onclick = () => {
   });
   msg += `\nTotal: ${money(cartTotalValue())}`;
   msg += `\nMétodo de pago: ${methodLabel}`;
-    if (needsPayerData) {
+  if (needsPayerData) {
     const name = payerNameInput.value.trim();
     if (name) msg += `\nPagado por: ${name}`;
   }
-    
   msg += "\n\n¡Gracias!";
+
   logOrder(entries, cartTotalValue(), methodLabel);
-  const url = `https://wa.me/${933203806}?text=${encodeURIComponent(msg)}`;
+  applyStockDecrease(entries);
+
+  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
   window.open(url, "_blank");
+
+  // Pedido enviado: se vacía el carrito para no descontar el stock dos veces
+  cart = {};
+  renderProducts();
+  renderCartBar();
+  renderDrawer();
   closeCheckout();
 };
-// ------- Big Data: registrar cada pedido -------
+
+function applyStockDecrease(entries){
+  const products = pGetProducts();
+  entries.forEach(entry => {
+    const idx = products.findIndex(pr => pr.id === entry.id);
+    if (idx > -1) {
+      const current = Number(products[idx].stock) || 0;
+      products[idx].stock = Math.max(0, current - entry.qty);
+    }
+  });
+  pSaveProducts(products);
+  PRODUCTS = products;
+}
+
+/* =========================================================
+   REGISTRO DE PEDIDOS (para el panel de ventas)
+========================================================= */
+
 const BD_KEY = "bc_orders_v1";
 
 function bdGetOrders(){
@@ -906,10 +1001,17 @@ function logOrder(entries, total, methodLabel){
     ts: Date.now(),
     total: total,
     method: methodLabel,
-    items: entries.map(e => ({ id:e.id, name:e.name, cat:e.cat, qty:e.qty, price:e.price })),
+    items: entries.map(e => ({ id: e.id, name: e.name, cat: e.cat, qty: e.qty, price: e.price })),
   });
   bdSaveOrders(orders);
 }
+
+/* =========================================================
+   INICIO
+========================================================= */
+
+pSeedIfNeeded();
+PRODUCTS = pGetProducts();
 
 renderCats();
 renderProducts();
