@@ -48,7 +48,47 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     position:relative;
     box-shadow:0 0 50px rgba(6,47,102,0.10);
   }
-
+/* Pantalla de bienvenida (splash) al entrar */
+.splash{
+  position:fixed;
+  inset:0;
+  z-index:200;
+  background:
+    radial-gradient(120% 140% at 12% -10%, var(--blue-bright) 0%, transparent 55%),
+    linear-gradient(160deg, var(--blue) 0%, var(--blue-dark) 100%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  opacity:1;
+  transition:opacity .5s ease;
+}
+.splash.hide{
+  opacity:0;
+  pointer-events:none;
+}
+.splash-logo{
+  width:96px;height:96px;
+  border-radius:50%;
+  background:#fff;
+  object-fit:cover;
+  box-shadow:0 10px 28px rgba(0,0,0,0.28);
+}
+.splash-title{
+  font-family:'Archivo Black', sans-serif;
+  font-weight:400;
+  color:#fff;
+  font-size:22px;
+  margin:0;
+  text-align:center;
+}
+.splash-tag{
+  color:#CFE1FA;
+  font-size:14px;
+  font-weight:500;
+  margin:0;
+}
   /* Header — el "cartel" de la bodega */
   header{
     position:sticky;
@@ -523,7 +563,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5F3QFSC6"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
-
+<!-- Pantalla de bienvenida: se muestra al entrar y desaparece sola -->
+<div class="splash" id="splashScreen">
+  <img src="carmencita.png" alt="Bodega Carmencita" class="splash-logo" onerror="this.style.display='none'">
+  <h1 class="splash-title">Bodega Carmencita</h1>
+  <p class="splash-tag">¡Bienvenido! Cargando catálogo…</p>
+</div>
 <div class="wrap">
 
   <header>
@@ -966,6 +1011,15 @@ confirmPayBtn.onclick = () => {
   renderCartBar();
   renderDrawer();
   closeCheckout();
+
+  /* PANTALLA DE BIENVENIDA (SPLASH)
+   Se muestra 1 segundo y luego se desvanece sola. */
+setTimeout(() => {
+  const splash = document.getElementById("splashScreen");
+  if (!splash) return;
+  splash.classList.add("hide");
+  setTimeout(() => splash.remove(), 500);
+}, 1000);
 };
 
 function applyStockDecrease(entries){

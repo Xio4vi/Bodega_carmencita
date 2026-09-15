@@ -209,6 +209,45 @@
   .lock-again.danger{color:var(--danger); border-color:#F2D4C8; background:#FDF3EF;}
   .lock-again.danger:hover{background:#FBE7DD;}
 
+  /* ALERTA DE STOCK (agotados / bajos) */
+.stock-alert{
+  background:#FDF3EF;
+  border:1.5px solid #F2D4C8;
+  border-radius:14px;
+  padding:14px 16px;
+  margin-bottom:16px;
+}
+.stock-alert-title{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:13.5px;
+  font-weight:800;
+  color:var(--danger);
+  margin:0 0 8px;
+}
+.stock-alert-line{
+  font-size:12.5px;
+  line-height:1.55;
+  color:var(--ink);
+  margin:0 0 4px;
+}
+.stock-alert-line:last-child{margin-bottom:0;}
+.stock-alert-line b{color:var(--danger);}
+.stock-alert-line.low b{color:var(--gold-dark);}
+
+/* Puntito rojo sobre la pestaña "Productos" cuando hay alertas */
+.admin-tab{position:relative;}
+.admin-tab .tab-dot{
+  position:absolute;
+  top:5px;
+  right:10px;
+  width:8px;height:8px;
+  border-radius:50%;
+  background:var(--danger);
+  border:1.5px solid var(--sky);
+}
+
   /* PRODUCTOS: lista */
   .prod-add-btn{
     display:flex;
@@ -804,6 +843,49 @@ function stockClass(stock){
   if (stock <= 3) return "low";
   return "ok";
 }
+/* ALERTA DE STOCK BAJO / AGOTADO */
+const LOW_STOCK_THRESHOLD = 3;
+
+function pStockIssues(){
+  const products = pGetProducts();
+  const outStock = products.filter(p => (Number(p.stock) || 0) <= 0);
+  const lowStock = products.filter(p => {
+    const s = Number(p.stock) || 0;
+    return s > 0 && s <= LOW_STOCK_THRESHOLD;
+  });
+  return { outStock, lowStock };
+}
+
+function pRenderStockAlertHtml(){
+  const { outStock, lowStock } = pStockIssues();
+  if (outStock.length === 0 && lowStock.length === 0) return "";
+
+  let html = `<div class="stock-alert"><p class="stock-alert-title">⚠️ Atención con el stock</p>`;
+  if (outStock.length > 0) {
+    html += `<p class="stock-alert-line"><b>Agotados (${outStock.length}):</b> ${outStock.map(p => p.name).join(", ")}</p>`;
+  }
+  if (lowStock.length > 0) {
+    html += `<p class="stock-alert-line low"><b>Bajos (${lowStock.length}):</b> ${lowStock.map(p => `${p.name} (${p.stock})`).join(", ")}</p>`;
+  }
+  html += `</div>`;
+  return html;
+}
+
+function pUpdateStockTabDot(){
+  const tabBtn = document.querySelector('.admin-tab[data-tab="productos"]');
+  if (!tabBtn) return;
+  const existingDot = tabBtn.querySelector(".tab-dot");
+  const { outStock, lowStock } = pStockIssues();
+  const hasIssues = outStock.length > 0 || lowStock.length > 0;
+
+  if (hasIssues && !existingDot) {
+    const dot = document.createElement("span");
+    dot.className = "tab-dot";
+    tabBtn.appendChild(dot);
+  } else if (!hasIssues && existingDot) {
+    existingDot.remove();
+  }
+}
 
 function prodThumbHtml(p){
   if (p.img && p.img.trim() !== "") {
@@ -840,7 +922,8 @@ function pRenderProductsPanel(){
         `;
       }).join("");
 
-  body.innerHTML = `
+    body.innerHTML = `
+    ${pRenderStockAlertHtml()}
     <button class="prod-add-btn" id="prodAddBtn">➕ Agregar producto nuevo</button>
     ${listHtml}
     <div class="bd-action-row">
@@ -857,7 +940,8 @@ function pRenderProductsPanel(){
     btn.onclick = () => deleteProduct(Number(btn.dataset.id));
   });
 
-  bdWireActions();
+   bdWireActions();
+  pUpdateStockTabDot();
 }
 
 function deleteProduct(id){
@@ -979,6 +1063,7 @@ function unlock(){
   document.getElementById("panel").style.display = "block";
   bdWireMainTabs();
   bdRenderActiveTab();
+  pUpdateStockTabDot();
 }
 
 document.getElementById("pinBtn").onclick = () => {
