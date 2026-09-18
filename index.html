@@ -52,7 +52,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   /* Pantalla de bienvenida (splash) al entrar */
     .splash{
     position:fixed;
-    inset:0;
+    top:0;
+    bottom:0;
+    left:50%;
+    transform:translateX(-50%);
+    width:100%;
+    max-width:480px;
     z-index:200;
     background:
       radial-gradient(rgba(255,255,255,0.06) 2px, transparent 2px),
@@ -1196,7 +1201,7 @@ function closeSplash(){
 const splashScreenEl = document.getElementById("splashScreen");
 if (splashScreenEl) splashScreenEl.addEventListener("click", closeSplash);
 
-setTimeout(closeSplash, 4500);
+setTimeout(closeSplash, 5000);
 </script>
 </body>
 </html>
