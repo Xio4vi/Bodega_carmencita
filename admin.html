@@ -388,9 +388,10 @@
 
   <!-- PANEL -->
   <div class="panel" id="panel">
-    <div class="admin-tabs" id="adminTabs">
+         <div class="admin-tabs" id="adminTabs">
       <button class="admin-tab active" data-tab="ventas">📊 Ventas</button>
       <button class="admin-tab" data-tab="productos">📦 Productos</button>
+      <button class="admin-tab" data-tab="stock">📉 Stock</button>
     </div>
     <div id="panelContent"></div>
   </div>
@@ -655,6 +656,8 @@ function bdRenderActiveTab(){
 
   if (currentTab === "productos") {
     pRenderProductsPanel();
+  } else if (currentTab === "stock") {
+    pRenderStockPanel();
   } else {
     bdRender();
   }
@@ -870,9 +873,61 @@ function pRenderStockAlertHtml(){
   html += `</div>`;
   return html;
 }
+function pStockRowHtml(p){
+  return `
+    <div class="prod-row">
+      <div class="prod-thumb">${prodThumbHtml(p)}</div>
+      <div class="prod-info">
+        <p class="n">${p.name}</p>
+        <p class="u">${p.unit}</p>
+        <div class="meta">
+          <span class="price">${money(p.price)}</span>
+          <span class="stock ${stockClass(p.stock)}">
+            ${p.stock <= 0 ? "Agotado" : `Quedan ${p.stock}`}
+          </span>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function pRenderStockPanel(){
+  const body = document.getElementById("panelContent");
+  const { outStock, lowStock } = pStockIssues();
+
+  if (outStock.length === 0 && lowStock.length === 0) {
+    body.innerHTML = `
+      <div class="bd-empty">
+        Todo tu stock está en buen nivel. ✅<br>
+        No hay productos agotados ni por agotarse.
+      </div>
+    `;
+    return;
+  }
+
+  let html = `
+    <div class="stock-alert">
+      <p class="stock-alert-title">⚠️ Reporte de stock</p>
+      <p class="stock-alert-line">
+        <b>${outStock.length}</b> agotado(s) y <b>${lowStock.length}</b> con stock bajo (umbral: ${LOW_STOCK_THRESHOLD} unidades o menos).
+      </p>
+    </div>
+  `;
+
+  if (outStock.length > 0) {
+    html += `<div class="bd-section-title">🚫 Agotados</div>`;
+    html += outStock.map(pStockRowHtml).join("");
+  }
+  if (lowStock.length > 0) {
+    html += `<div class="bd-section-title">🟡 Stock bajo</div>`;
+    html += lowStock.map(pStockRowHtml).join("");
+  }
+
+  body.innerHTML = html;
+}
 
 function pUpdateStockTabDot(){
-  const tabBtn = document.querySelector('.admin-tab[data-tab="productos"]');
+  const tabBtn = document.querySelector('.admin-tab[data-tab="stock"]');
   if (!tabBtn) return;
   const existingDot = tabBtn.querySelector(".tab-dot");
   const { outStock, lowStock } = pStockIssues();
