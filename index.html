@@ -1102,17 +1102,19 @@ confirmPayBtn.onclick = () => {
   const methodLabel = PAY_METHODS.find(m => m.id === selectedPay).label;
   const needsPayerData = selectedPay === "yape" || selectedPay === "plin";
 
-  let msg = "Hola Bodega Carmencita! 👋 Quiero hacer este pedido:\n\n";
+   const LINE = "━━━━━━━━━━━━━━━━━━";
+  let msg = `🧾 *Hola Bodega Carmencita! 👋 Quiero hacer este pedido:\*\n${LINE}\n`;
   entries.forEach(item => {
     msg += `• ${item.qty} x ${item.name} (${item.unit}) — ${money(item.price * item.qty)}\n`;
   });
-  msg += `\nTotal: ${money(cartTotalValue())}`;
-  msg += `\nMétodo de pago: ${methodLabel}`;
+  msg += `${LINE}\n`;
+  msg += `💰 Total: *${money(cartTotalValue())}*\n`;
+  msg += `💳 Método de pago: *${methodLabel}*\n`;
   if (needsPayerData) {
     const name = payerNameInput.value.trim();
-    if (name) msg += `\nPagado por: ${name}`;
+    if (name) msg += `🙋 Pagado por: *${name}*\n`;
   }
-  msg += "\n\n¡Gracias!";
+  msg += `${LINE}\n¡Gracias! 🙌`;
 
   logOrder(entries, cartTotalValue(), methodLabel);
   applyStockDecrease(entries);
