@@ -90,13 +90,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   /* Foto grande cubriendo la mitad de la pantalla, a un costado */
    /* Foto grande y centrada, tipo avatar */
   .splash-photo-half{
-    width:250px;
-    height:250px;
+    width:min(52vw, 24vh, 230px);
+    height:min(52vw, 24vh, 230px);
     border-radius:50%;
     overflow:hidden;
     border:5px solid rgba(255,255,255,0.85);
     box-shadow:0 18px 40px rgba(0,0,0,0.35);
-    margin:0 auto 22px;
+    margin:0 auto clamp(12px, 3vh, 22px);
     animation:splashPhotoPop .55s cubic-bezier(.34,1.56,.64,1) both;
   }
   .splash-photo-half img{
@@ -114,8 +114,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     position:absolute;
     top:50%;
     left:50%;
-    width:86%;
+    width:88%;
     max-width:340px;
+    max-height:88vh;
     transform:translate(-50%, -50%);
     z-index:2;
     display:flex;
@@ -123,20 +124,20 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     align-items:center;
     text-align:center;
   }
-  .splash-bubble{
+    .splash-bubble{
     position:relative;
     background:#fff;
     color:var(--blue-dark);
-    padding:16px 20px;
+    padding:clamp(10px, 3vh, 16px) clamp(14px, 4vw, 20px);
     border-radius:22px;
     box-shadow:0 16px 34px rgba(0,0,0,0.3);
     opacity:0;
     animation:splashBubbleIn .5s .3s cubic-bezier(.34,1.56,.64,1) both;
-    margin-bottom:18px;
+    margin-bottom:clamp(10px, 2.5vh, 18px);
   }
   .splash-bubble p{
     margin:0;
-    font-size:14.5px;
+    font-size:clamp(12.5px, 3.6vw, 14.5px);
     font-weight:800;
     line-height:1.42;
     text-align:center;
@@ -159,16 +160,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     100%{transform:scale(1); opacity:1;}
   }
 
-    .splash-title{
+     .splash-title{
     font-family:'Archivo Black', sans-serif;
     font-weight:400;
     color:#fff;
-    font-size:42px;
+    font-size:clamp(26px, 8.5vw, 42px);
     line-height:1.08;
     letter-spacing:0.5px;
     text-transform:uppercase;
     text-shadow:0 6px 18px rgba(0,0,0,0.35);
-    margin:20px 0 0;
+    margin:clamp(12px, 3vh, 20px) 0 0;
   }
 
   .splash-hint{
